@@ -1,0 +1,180 @@
+body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+
+        .bg-fundo {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('../assets/fundo.png'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -1; 
+        }
+
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 0;
+        }
+
+
+        .hero-container {
+            position: relative;
+            z-index: 10; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .content-box {
+            background-color: rgba(20, 20, 20, 0.9); 
+            border: 1px solid rgba(57, 255, 20, 0.2);
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 650px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            color: #ffffff;
+            transition: all 0.4s ease-in-out;
+        }
+
+        .content-box h1 {
+            font-size: 2.5rem;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .neon-text {
+            color: #39FF14;
+            text-shadow: 0 0 10px rgba(57, 255, 20, 0.7);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #cccccc;
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+
+        .features-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 40px 0;
+            text-align: left;
+            display: inline-block;
+        }
+
+        .features-list li {
+            margin-bottom: 15px;
+            font-size: 1rem;
+            line-height: 1.6;
+            display: flex;
+            align-items: start;
+        }
+        .features-list li::before {
+            content: '✓';
+            color: #39FF14;
+            font-weight: bold;
+            margin-right: 15px;
+            margin-top: 2px;
+        }
+
+        .cta-button {
+            background-color: #39FF14;
+            color: #000000;
+            border: none;
+            padding: 18px 35px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(57, 255, 20, 0.4);
+        }
+
+        .cta-button:hover {
+            box-shadow: 0 0 25px #39FF14;
+            transform: scale(1.03);
+        }
+
+        .user-type-form {
+            display: none;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 30px;
+        }
+
+        .form-title {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            color: #ffffff;
+        }
+
+        .option-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .option-button {
+            background-color: transparent;
+            color: #ffffff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 15px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .option-button:hover {
+            border-color: #39FF14;
+            color: #39FF14;
+            background-color: rgba(57, 255, 20, 0.05);
+        }
+        
+        .show-form {
+            display: block !important;
+        }
+
+.footer {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    text-align: center;
+    color: #ffffff;
+    font-size: 0.9rem;
+}
+
+.footer-link {
+    color: #39FF14;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.footer-link:hover {
+    text-shadow: 0 0 10px rgba(57, 255, 20, 0.7);
+}
