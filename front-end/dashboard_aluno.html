@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Aluno - FitSync</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/dashboard_aluno.css">
+</head>
+<body>
+    <div class="bg-fundo"></div>
+    <div class="bg-overlay"></div>
+
+    <div class="dashboard-container">
+        
+        <aside class="sidebar">
+            <div class="brand-box">
+                <span class="logo-dot"></span>
+                <div class="brand-text">
+                    <strong>FitSync</strong>
+                    <span>Área do Aluno</span>
+                </div>
+            </div>
+
+            <div class="user-info">
+                <strong id="aluno-nome">Carregando Aluno...</strong>
+                <span id="aluno-objetivo-sidebar">Objetivo: --</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="sidebar-link active" onclick="showSection('meu-treino')">💪 Meu Treino Ativo</button>
+                <button class="sidebar-link" onclick="showSection('historico')">📅 Histórico de Treinos</button>
+                <button class="sidebar-link" onclick="showSection('evolucao')">📈 Minha Evolução</button>
+                <button class="sidebar-link" onclick="showSection('perfil')">⚙️ Meu Perfil</button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="sidebar-link logout-link" onclick="logout()">Sair</button>
+            </div>
+        </aside>
+
+        <main class="dashboard-main">
+            
+            <header class="dashboard-header">
+                <div>
+                    <p class="eyebrow">Área do Aluno</p>
+                    <h1 id="userGreeting">Bora treinar hoje?</h1>
+                    <p class="subtitle">Acompanhe sua rotina de exercícios e evolução técnica em tempo real.</p>
+                </div>
+            </header>
+
+            <div class="content-area">
+
+                <section id="meu-treino" class="content-section">
+                    <div class="summary-row">
+                        <div class="summary-card">
+                            <span>Frequência Semanal</span>
+                            <strong id="total-frequencia">0%</strong>
+                        </div>
+                        <div class="summary-card">
+                            <span>Último Peso</span>
+                            <strong id="total-peso">0.0 kg</strong>
+                        </div>
+                        <div class="summary-card">
+                            <span>Meu IMC Atual</span>
+                            <strong id="total-imc" style="color: #39FF14;">0.0</strong>
+                        </div>
+                    </div>
+
+                    <div class="section-title-row">
+                        <h2>💪 Minha Ficha de Treino Ativa</h2>
+                        <button class="primary-button" onclick="abrirModalRegistrarTreino()">Check-in / Registrar Treino</button>
+                    </div>
+
+                    <div id="divisoes-treino-container" class="divisoes-container">
+                        <div class="card" style="text-align: center; color: #666; padding: 40px; width: 100%;">
+                            Nenhuma ficha de treino ativa vinculada a você. Solicite ao seu Personal Trainer!
+                        </div>
+                    </div>
+                </section>
+
+                <section id="historico" class="content-section" style="display:none;">
+                    <div class="section-title-row">
+                        <h2>📅 Histórico de Execuções</h2>
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Data / Hora</th>
+                                    <th>Ficha Executada</th>
+                                    <th>Observações do Treino</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historico-container">
+                                <tr>
+                                    <td colspan="3" style="text-align: center; color: #666; padding: 40px;">
+                                        Nenhuma execução de treino registrada até o momento.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="evolucao" class="content-section" style="display:none;">
+                    <div class="section-title-row">
+                        <h2>📈 Evolução Física e Composição Corporal</h2>
+                        <button class="primary-button" onclick="abrirModalAtualizarDados()">Atualizar Peso / Altura</button>
+                    </div>
+
+                    <p class="subtitle" style="margin-bottom: 24px;">Histórico de medições registradas no sistema (Recomendado atualizar a cada 2 meses):</p>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Data do Registro</th>
+                                    <th>Peso (kg)</th>
+                                    <th>Altura (m)</th>
+                                    <th>IMC Calculado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="evolucao-container">
+                                <tr>
+                                    <td colspan="4" style="text-align: center; color: #666; padding: 40px;">
+                                        Nenhum dado corporal cadastrado ainda.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="perfil" class="content-section" style="display:none;">
+                    <div class="section-title-row">
+                        <h2>⚙️ Meu Perfil Cadastral</h2>
+                    </div>
+
+                    <div class="card panel-form" style="max-width: 600px;">
+                        <div class="form-group">
+                            <label class="form-label">Nome Completo</label>
+                            <input type="text" class="form-input" id="perfil-nome" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Email de Acesso</label>
+                            <input type="email" class="form-input" id="perfil-email" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Data de Nascimento</label>
+                            <input type="text" class="form-input" id="perfil-nascimento" readonly>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <div class="modal-overlay hidden" id="registrar-treino-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div>
+                    <p class="eyebrow">Check-in Técnico</p>
+                    <h3>Registrar Treino Diário</h3>
+                </div>
+                <button class="close-modal" onclick="fecharModalRegistrarTreino()">×</button>
+            </div>
+
+            <form id="form-registrar-treino" onsubmit="event.preventDefault(); salvarExecucaoTreino();" class="modal-form">
+                <div class="form-group">
+                    <label for="select-ficha">Qual divisão você executou hoje?</label>
+                    <select id="select-ficha" class="form-input" style="background: #141414;" required>
+                        </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="treino-obs">Observações / Sentiu dores ou fadiga extrema?</label>
+                    <textarea id="treino-obs" class="form-textarea" placeholder="Ex: Subi carga no supino reto, treino rendeu bem..."></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="secondary-button" onclick="fecharModalRegistrarTreino()">Cancelar</button>
+                    <button type="submit" class="primary-button">Registrar Treino</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay hidden" id="atualizar-dados-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div>
+                    <p class="eyebrow">Indicadores Fisiológicos</p>
+                    <h3>Atualizar Dados Corporais</h3>
+                </div>
+                <button class="close-modal" onclick="fecharModalAtualizarDados()">×</button>
+            </div>
+
+            <form id="form-atualizar-dados" onsubmit="event.preventDefault(); salvarDadosCorporais();" class="modal-form">
+                <div class="form-group">
+                    <label for="corpo-peso">Peso Atual (kg)</label>
+                    <input id="corpo-peso" class="form-input" type="number" step="0.01" min="20" max="300" placeholder="Ex: 78.50" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="corpo-altura">Altura Atual (m)</label>
+                    <input id="corpo-altura" class="form-input" type="number" step="0.01" min="1.00" max="2.50" placeholder="Ex: 1.75" required>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="secondary-button" onclick="fecharModalAtualizarDados()">Cancelar</button>
+                    <button type="submit" class="primary-button">Salvar e Calcular</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/dashboard_aluno.js"></script>
+</body>
+</html>

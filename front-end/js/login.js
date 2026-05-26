@@ -1,3 +1,4 @@
+﻿// Lógica de autenticação: envia credenciais e armazena token JWT
 const form = document.getElementById("loginForm");
 const message = document.getElementById("message");
 const loginButton = document.getElementById("loginButton");
@@ -10,6 +11,9 @@ form.addEventListener("submit", async (event) => {
 
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
+  
+  // Tipo de usuário (ALUNO ou PERSONAL)
+  const userType = form.querySelector('input[name="userType"]').value;
 
   if (!email || !password) {
     message.textContent = "Preencha email e senha.";
@@ -24,7 +28,8 @@ form.addEventListener("submit", async (event) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password }),
+      // Envia credenciais e tipo para o endpoint de login
+      body: JSON.stringify({ email, password, tipo_usuario: userType }),
     });
 
     const data = await response.json();
@@ -39,12 +44,18 @@ form.addEventListener("submit", async (event) => {
     message.textContent = data.mensagem || "Login realizado com sucesso!";
     message.classList.add("success");
 
-    // Salva token no localStorage e redireciona
+    // Salva token e dados do usuário
     localStorage.setItem("token", data.token);
     localStorage.setItem("usuario", JSON.stringify(data.usuario));
+    // Redireciona conforme tipo
     setTimeout(() => {
-      window.location.href = "dashboard.html";
+      if (userType === "PERSONAL") {
+        window.location.href = "dashboard_personal.html";
+      } else {
+        window.location.href = "dashboard_aluno.html";
+      }
     }, 800);
+
   } catch (error) {
     console.error(error);
     message.textContent = "Erro ao conectar com o servidor.";

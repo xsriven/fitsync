@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Aluno - FitSync</title>
+    <title>Portal Técnico Personal - FitSync</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
-    <!-- Página de login (ALUNO). Lógica de autenticação em js/login.js -->
     <div class="bg-fundo"></div>
     <div class="bg-overlay"></div>
 
@@ -16,19 +15,19 @@
         <div class="login-card split-card">
             
             <div class="card-column form-side">
-                <h1>Entrar no <span class="neon-text">FitSync</span></h1>
-                <p class="subtitle">Sua performance, em perfeita sintonia.</p>
+                <h1>Portal <span class="neon-text">Técnico</span></h1>
+                <p class="subtitle">Gerenciamento inteligente de treinos e alta performance.</p>
                 
                 <form id="loginForm">
-                    <input type="hidden" name="userType" value="ALUNO">
+                    <input type="hidden" name="userType" value="PERSONAL">
 
-                    <label for="email">E-mail do Aluno</label>
+                    <label for="email">E-mail Profissional</label>
                     <input id="email" type="email" name="email" placeholder="Insira seu e-mail" required>
 
                     <label for="password">Senha</label>
                     <input id="password" type="password" name="password" placeholder="Digite sua senha" required>
 
-                    <button id="loginButton" type="submit">Entrar</button>
+                    <button id="loginButton" type="submit">Acessar Painel</button>
                 </form>
                 <div id="message" class="message"></div>
             </div>
@@ -36,17 +35,17 @@
             <div class="vertical-divider"></div>
 
             <div class="card-column action-side">
-                <h2>Área do <span class="neon-text">Personal</span></h2>
-                <p class="action-description">Acesse seu painel técnico para gerenciar fichas de treino, anamneses e acompanhar a evolução dos seus alunos.</p>
+                <h2>Área do <span class="neon-text">Aluno</span></h2>
+                <p class="action-description">Quer consultar sua ficha de treino ativa, registrar suas execuções diárias ou acompanhar a evolução do seu IMC?</p>
                 
-                <a href="login_personal.html" class="btn-secondary-neon">Acessar Portal Técnico</a>
+                <a href="login.html" class="btn-secondary-neon">Acessar Como Aluno</a>
             </div>
 
         </div>
     </div>
 
     <footer class="footer">
-        <p>Não possui uma conta? Contate seu Personal Trainer para obter o acesso.</p>
+        <p>Acesso restrito a profissionais cadastrados. FitSync &copy; 2026.</p>
     </footer>
 
     <script src="js/login.js"></script>

@@ -1,0 +1,366 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Personal - FitSync</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/dashboard_personal.css">
+</head>
+<body>
+    <div class="bg-fundo"></div>
+    <div class="bg-overlay"></div>
+
+    <div class="dashboard-container">
+        
+        <aside class="sidebar">
+            <div class="brand-box">
+                <span class="logo-dot"></span>
+                <div class="brand-text">
+                    <strong>FitSync</strong>
+                    <span>Personal</span>
+                </div>
+            </div>
+
+            <div class="user-info">
+                <strong id="usuario-nome">Personal</strong>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="sidebar-link active" onclick="showSection('meus-alunos')">👥 Meus Alunos</button>
+                <button class="sidebar-link" onclick="showSection('treinos')">💪 Treinos</button>
+                <button class="sidebar-link" onclick="showSection('criar-treino')">➕ Criar Treino</button>
+                <button class="sidebar-link" onclick="showSection('exercicios')">🏋️ Exercícios</button>
+                <button class="sidebar-link" onclick="showSection('perfil')">⚙️ Meu Perfil</button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="sidebar-link logout-link" onclick="logout()">Sair</button>
+            </div>
+        </aside>
+
+        <main class="dashboard-main">
+            
+            <header class="dashboard-header">
+                <div>
+                    <p class="eyebrow">Gerenciador</p>
+                    <h1 id="userGreeting">Gerenciador de Treinos</h1>
+                    <p class="subtitle">Gerencie seus alunos, treinos e progressão de carga.</p>
+                </div>
+                <div class="dashboard-actions">
+                    <input type="text" class="search-box" placeholder="Buscar aluno..." id="searchBox">
+                </div>
+            </header>
+
+            <div class="content-area">
+
+                <section id="meus-alunos" class="content-section">
+                    <div class="summary-row">
+                        <div class="summary-card">
+                            <span>Alunos Ativos</span>
+                            <strong id="total-alunos">0</strong>
+                        </div>
+                        <div class="summary-card">
+                            <span>Total de Treinos</span>
+                            <strong id="total-treinos">0</strong>
+                        </div>
+                        <div class="summary-card">
+                            <span>Status do Sistema</span>
+                            <strong style="color: #39FF14; font-size: 1.5rem;">Online</strong>
+                        </div>
+                    </div>
+
+                    <div class="section-title-row">
+                        <h2>👥 Listagem de Alunos</h2>
+                        <button class="primary-button" onclick="abrirModalCadastroAluno()">+ Novo Aluno</button>
+                    </div>
+
+                    <div id="alunos-container" class="alunos-container"></div>
+                </section>
+
+                <section id="treinos" class="content-section" style="display:none;">
+                    <div class="section-title-row">
+                        <h2>💪 Meus Treinos Cadastrados</h2>
+                        <button class="primary-button" onclick="showSection('criar-treino')">+ Novo Treino</button>
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nome do Treino</th>
+                                    <th>Alunos Vinculados</th>
+                                    <th>Exercícios</th>
+                                    <th>Duração</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="treinos-container">
+                                <tr>
+                                    <td colspan="5" style="text-align: center; color: #666; padding: 40px;">
+                                        Nenhum treino cadastrado até o momento.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="criar-treino" class="content-section" style="display:none;">
+                    <div class="section-title-row">
+                        <h2>➕ Criar Novo Treino</h2>
+                    </div>
+
+                    <div class="card panel-form">
+                        <div class="form-group">
+                            <label class="form-label">Nome do Treino</label>
+                            <input type="text" class="form-input" id="treino-nome" placeholder="Ex: Treino A - Hipertrofia Focada">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Descrição / Observações</label>
+                            <textarea class="form-textarea" id="treino-desc" placeholder="Instruções gerais sobre o treino..."></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Frequência (Dias/Semana)</label>
+                                <input type="number" class="form-input" id="treino-freq" placeholder="Ex: 3">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Duração Estimada (Minutos)</label>
+                                <input type="number" class="form-input" id="treino-duracao" placeholder="Ex: 60">
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="section-title-row" style="margin-top: 20px;">
+                            <h3 style="color:#fff; margin:0; font-size:1.2rem;">Exercícios do Treino</h3>
+                        </div>
+                        
+                        <div id="exercicios-container"></div>
+
+                        <button class="btn-add-exercise" onclick="adicionarExercicio()">+ Adicionar Exercício ao Treino</button>
+
+                        <div class="form-actions-footer">
+                            <button class="secondary-button" onclick="showSection('treinos')">Cancelar</button>
+                            <button class="primary-button" onclick="salvarTreino()">💾 Salvar Treino</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="exercicios" class="content-section" style="display:none;">
+                    <div class="section-title-row">
+                        <h2>🏋️ Biblioteca de Exercícios</h2>
+                        <button class="primary-button" onclick="abrirModalCadastroExercicio()">+ Novo Exercício</button>
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nome do Exercício</th>
+                                    <th>Grupo Muscular</th>
+                                    <th>Descrição Técnica</th>
+                                    <th>Vídeo / Link</th>
+                                </tr>
+                            </thead>
+                            <tbody id="exercicios-table-body">
+                                <tr>
+                                    <td colspan="4" style="text-align: center; color: #666; padding: 40px;">
+                                        Carregando biblioteca...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="perfil" class="content-section" style="display:none;">
+                    <div class="section-title-row">
+                        <h2>⚙️ Meu Perfil Técnico</h2>
+                    </div>
+
+                    <div class="card panel-form" style="max-width: 600px;">
+                        <div class="form-group">
+                            <label class="form-label">Nome Completo</label>
+                            <input type="text" class="form-input" id="perfil-nome" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Email de Acesso</label>
+                            <input type="email" class="form-input" id="perfil-email" readonly>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <div class="modal-overlay hidden" id="cadastro-aluno-modal">
+        <div class="modal-card" style="max-width: 550px;">
+            <div class="modal-header">
+                <div>
+                    <p class="eyebrow">Novo Registro</p>
+                    <h3>Cadastrar Aluno</h3>
+                </div>
+                <button class="close-modal" onclick="fecharModalCadastroAluno()">×</button>
+            </div>
+
+            <div class="step-indicator">
+                <span id="ind-step-1" class="step-dot active">1. Dados e Avaliação</span>
+                <span id="ind-step-2" class="step-dot">2. Anamnese </span>
+            </div>
+
+            <form id="form-cadastro-aluno" onsubmit="event.preventDefault();" class="modal-form">
+                
+                <div id="form-step-1" class="modal-step-content">
+                    <h4 style="color: #39FF14; margin: 0 0 10px 0; font-size: 0.9rem; text-transform: uppercase;">1. Credenciais e Perfil</h4>
+                    <div class="form-group">
+                        <label for="aluno-nome">Nome Completo</label>
+                        <input id="aluno-nome" class="form-input" type="text" placeholder="Nome do aluno" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="aluno-email">Email de Acesso</label>
+                            <input id="aluno-email" class="form-input" type="email" placeholder="email@fitsync.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label cover="aluno-password">Senha Temporária</label>
+                            <input id="aluno-password" class="form-input" type="password" placeholder="Mínimo 6 dig" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="aluno-objetivo">Objetivo Principal</label>
+                            <input id="aluno-objetivo" class="form-input" type="text" placeholder="Ex: Hipertrofia">
+                        </div>
+                        <div class="form-group">
+                            <label for="aluno-data">Data de Nascimento</label>
+                            <input id="aluno-data" class="form-input" type="date" required>
+                        </div>
+                    </div>
+
+                    <div class="divider" style="margin: 15px 0;"></div>
+
+                    <h4 style="color: #39FF14; margin: 0 0 10px 0; font-size: 0.9rem; text-transform: uppercase;">2. Avaliação Corporal Inicial</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="aluno-peso">Peso Inicial (kg)</label>
+                            <input id="aluno-peso" class="form-input" type="number" step="0.01" min="20" max="300" placeholder="Ex: 75.0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="aluno-altura">Altura Inicial (m)</label>
+                            <input id="aluno-altura" class="form-input" type="number" step="0.01" min="1.00" max="2.50" placeholder="Ex: 1.75" required>
+                        </div>
+                    </div>
+
+                    <div class="form-actions" style="margin-top: 20px;">
+                        <button type="button" class="secondary-button" onclick="fecharModalCadastroAluno()">Cancelar</button>
+                        <button type="button" class="primary-button" onclick="proximaEtapaCadastro()">Avançar ➔</button>
+                    </div>
+                </div>
+
+                <div id="form-step-2" class="modal-step-content hidden">
+                    <h4 style="color: #39FF14; margin: 0 0 10px 0; font-size: 0.9rem; text-transform: uppercase;">3. Histórico Clínico do Aluno</h4>
+                    
+                    <div class="form-group">
+                        <label for="anamnese-lesoes">Histórico de Lesões / Cirurgias</label>
+                        <textarea id="anamnese-lesoes" class="form-textarea" placeholder="Ex: Rompimento de ligamento no joelho esquerdo..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="anamnese-restricoes">Restrições Clínicas ou Cardíacas</label>
+                        <textarea id="anamnese-restricoes" class="form-textarea" placeholder="Ex: Evitar sobrecarga axial na coluna..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="anamnese-condicoes">Condições Médicas / Medicamentos</label>
+                        <textarea id="anamnese-condicoes" class="form-textarea" placeholder="Ex: Nenhuma condição severa relatada..."></textarea>
+                    </div>
+
+                    <div class="form-actions" style="margin-top: 20px;">
+                        <button type="button" class="secondary-button" onclick="etapaAnteriorCadastro()">⬅ Voltar</button>
+                        <button type="button" class="primary-button" onclick="cadastrarAluno()">💾 Salvar Cadastro</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay hidden" id="cadastro-exercicio-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div>
+                    <p class="eyebrow">Nova Categoria</p>
+                    <h3>Cadastrar Exercício</h3>
+                </div>
+                <button class="close-modal" onclick="fecharModalCadastroExercicio()">×</button>
+            </div>
+
+            <form id="form-cadastro-exercicio" onsubmit="event.preventDefault(); cadastrarExercicio();" class="modal-form">
+                <div class="form-group">
+                    <label for="exercicio-nome">Nome do Exercício</label>
+                    <input id="exercicio-nome" class="form-input" type="text" placeholder="Ex: Supino Reto com Barra" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="exercicio-grupo">Grupo Muscular</label>
+                    <select id="exercicio-grupo" class="form-input" style="background: #141414;" required>
+                        <option value="" disabled selected>Selecione uma categoria</option>
+                        <option value="Peito">Peito</option>
+                        <option value="Costas">Costas</option>
+                        <option value="Pernas">Pernas</option>
+                        <option value="Ombros">Ombros</option>
+                        <option value="Bíceps">Bíceps</option>
+                        <option value="Tríceps">Tríceps</option>
+                        <option value="Abdômen">Abdômen</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="exercicio-desc">Descrição Técnica / Instruções</label>
+                    <textarea id="exercicio-desc" class="form-textarea" placeholder="Ex: Escápulas retraídas, barra tocando o terço inferior do peitoral..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="exercicio-url">URL do Vídeo Demonstrativo (Opcional)</label>
+                    <input id="exercicio-url" class="form-input" type="url" placeholder="https://youtube.com/watch?v=...">
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="secondary-button" onclick="fecharModalCadastroExercicio()">Cancelar</button>
+                    <button type="submit" class="primary-button">Salvar Exercício</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay hidden" id="aluno-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div>
+                    <p class="eyebrow">Ficha Cadastral</p>
+                    <h3 id="modal-aluno-title">Detalhes do Aluno</h3>
+                </div>
+                <button class="close-modal" onclick="fecharModalAluno()">×</button>
+            </div>
+
+            <div id="modal-aluno-body" class="dashboard-message">
+                <p>Carregando prontuário do aluno...</p>
+            </div>
+            
+            <div class="form-actions" style="margin-top: 24px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 16px;">
+                <button type="button" class="secondary-button" onclick="fecharModalAluno()" style="width: 100%;">Fechar Janela</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/dashboard_personal.js"></script>
+</body>
+</html>
