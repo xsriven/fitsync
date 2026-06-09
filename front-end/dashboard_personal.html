@@ -27,11 +27,11 @@
             </div>
 
             <nav class="sidebar-nav">
-                <button class="sidebar-link active" onclick="showSection('meus-alunos')">👥 Meus Alunos</button>
-                <button class="sidebar-link" onclick="showSection('treinos')">💪 Treinos</button>
-                <button class="sidebar-link" onclick="showSection('criar-treino')">➕ Criar Treino</button>
-                <button class="sidebar-link" onclick="showSection('exercicios')">🏋️ Exercícios</button>
-                <button class="sidebar-link" onclick="showSection('perfil')">⚙️ Meu Perfil</button>
+                <button class="sidebar-link active" onclick="showSection('meus-alunos')">Meus Alunos</button>
+                <button class="sidebar-link" onclick="showSection('treinos')">Treinos</button>
+                <button class="sidebar-link" onclick="showSection('criar-treino')">Criar Treino</button>
+                <button class="sidebar-link" onclick="showSection('exercicios')">Exercícios</button>
+                <button class="sidebar-link" onclick="showSection('perfil')">Meu Perfil</button>
             </nav>
 
             <div class="sidebar-footer">
@@ -71,7 +71,7 @@
                     </div>
 
                     <div class="section-title-row">
-                        <h2>👥 Listagem de Alunos</h2>
+                        <h2>Listagem de Alunos</h2>
                         <button class="primary-button" onclick="abrirModalCadastroAluno()">+ Novo Aluno</button>
                     </div>
 
@@ -80,7 +80,7 @@
 
                 <section id="treinos" class="content-section" style="display:none;">
                     <div class="section-title-row">
-                        <h2>💪 Meus Treinos Cadastrados</h2>
+                        <h2>Meus Treinos Cadastrados</h2>
                         <button class="primary-button" onclick="showSection('criar-treino')">+ Novo Treino</button>
                     </div>
 
@@ -88,17 +88,17 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Nome do Treino</th>
-                                    <th>Alunos Vinculados</th>
-                                    <th>Exercícios</th>
-                                    <th>Duração</th>
+                                    <th>Aluno</th>
+                                    <th>E-mail do Aluno</th>
+                                    <th>Nº de Divisões</th>
+                                    <th>Status</th>
                                     <th>Ações</th>
                                 </tr>
                             </thead>
                             <tbody id="treinos-container">
                                 <tr>
                                     <td colspan="5" style="text-align: center; color: #666; padding: 40px;">
-                                        Nenhum treino cadastrado até o momento.
+                                        Nenhuma ficha de treino cadastrada até o momento.
                                     </td>
                                 </tr>
                             </tbody>
@@ -108,52 +108,78 @@
 
                 <section id="criar-treino" class="content-section" style="display:none;">
                     <div class="section-title-row">
-                        <h2>➕ Criar Novo Treino</h2>
+                        <h2>Criar Ficha de Treino para Aluno</h2>
                     </div>
 
                     <div class="card panel-form">
-                        <div class="form-group">
-                            <label class="form-label">Nome do Treino</label>
-                            <input type="text" class="form-input" id="treino-nome" placeholder="Ex: Treino A - Hipertrofia Focada">
+                        <div class="form-group" style="position: relative;">
+                            <label class="form-label">Buscar Aluno</label>
+                            <input type="text" class="form-input" id="busca-aluno-ficha" placeholder="Digite o nome do aluno..." onkeyup="filtrarAlunosParaFicha()" style="width: 100%;">
+                            <div class="dropdown-alunos-ficha" id="dropdown-alunos-ficha" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: #1a1a1a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; max-height: 200px; overflow-y: auto; z-index: 1000; margin-top: 2px;"></div>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Descrição / Observações</label>
-                            <textarea class="form-textarea" id="treino-desc" placeholder="Instruções gerais sobre o treino..."></textarea>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">Frequência (Dias/Semana)</label>
-                                <input type="number" class="form-input" id="treino-freq" placeholder="Ex: 3">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Duração Estimada (Minutos)</label>
-                                <input type="number" class="form-input" id="treino-duracao" placeholder="Ex: 60">
-                            </div>
+                            <div class="aluno-ficha-selecionado" id="aluno-ficha-selecionado" style="padding: 10px 12px; background: rgba(57,255,20,0.1); border: 1px solid rgba(57,255,20,0.3); border-radius: 6px; color: #39FF14; font-size: 0.9rem; min-height: 38px; display: flex; align-items: center;">Nenhum aluno selecionado</div>
+                            <input type="hidden" id="aluno-id-ficha" value="">
                         </div>
 
                         <div class="divider"></div>
 
                         <div class="section-title-row" style="margin-top: 20px;">
-                            <h3 style="color:#fff; margin:0; font-size:1.2rem;">Exercícios do Treino</h3>
+                            <h3 style="color:#fff; margin:0; font-size:1.2rem;">Divisão do Treino</h3>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Identificador da Divisão</label>
+                            <input type="text" class="form-input" id="divisao-identificador" placeholder="Ex: Treino A - Membros Superiores">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Dia da Semana</label>
+                            <select class="form-input" id="divisao-ordem" value="1">
+                                <option value="1">1 - Segunda</option>
+                                <option value="2">2 - Terça</option>
+                                <option value="3">3 - Quarta</option>
+                                <option value="4">4 - Quinta</option>
+                                <option value="5">5 - Sexta</option>
+                                <option value="6">6 - Sábado</option>
+                                <option value="7">7 - Domingo</option>
+                            </select>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="section-title-row" style="margin-top: 20px;">
+                            <h3 style="color:#fff; margin:0; font-size:1.2rem;">Exercícios da Divisão</h3>
                         </div>
                         
                         <div id="exercicios-container"></div>
 
-                        <button class="btn-add-exercise" onclick="adicionarExercicio()">+ Adicionar Exercício ao Treino</button>
+                        <button class="btn-add-exercise" onclick="adicionarExercicio()">+ Adicionar Exercício</button>
 
                         <div class="form-actions-footer">
                             <button class="secondary-button" onclick="showSection('treinos')">Cancelar</button>
-                            <button class="primary-button" onclick="salvarTreino()">💾 Salvar Treino</button>
+                            <button class="primary-button" onclick="salvarDivisaoTreino()">Salvar Divisão</button>
                         </div>
                     </div>
                 </section>
 
                 <section id="exercicios" class="content-section" style="display:none;">
                     <div class="section-title-row">
-                        <h2>🏋️ Biblioteca de Exercícios</h2>
-                        <button class="primary-button" onclick="abrirModalCadastroExercicio()">+ Novo Exercício</button>
+                        <h2>Biblioteca de Exercícios</h2>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <select id="filtro-grupo-muscular" class="form-input" style="width: 200px; background: #141414; padding: 8px 12px; border-radius: 8px;" onchange="filtrarExercicios()">
+                                <option value="">Todos os grupos</option>
+                                <option value="Peito">Peito</option>
+                                <option value="Costas">Costas</option>
+                                <option value="Pernas">Pernas</option>
+                                <option value="Ombros">Ombros</option>
+                                <option value="Bíceps">Bíceps</option>
+                                <option value="Tríceps">Tríceps</option>
+                                <option value="Abdômen">Abdômen</option>
+                            </select>
+                            <button class="primary-button" onclick="abrirModalCadastroExercicio()">+ Novo Exercício</button>
+                        </div>
                     </div>
 
                     <div class="table-container">
@@ -179,7 +205,7 @@
 
                 <section id="perfil" class="content-section" style="display:none;">
                     <div class="section-title-row">
-                        <h2>⚙️ Meu Perfil Técnico</h2>
+                        <h2>Meu Perfil Técnico</h2>
                     </div>
 
                     <div class="card panel-form" style="max-width: 600px;">
@@ -211,7 +237,7 @@
 
             <div class="step-indicator">
                 <span id="ind-step-1" class="step-dot active">1. Dados e Avaliação</span>
-                <span id="ind-step-2" class="step-dot">2. Anamnese </span>
+                <span id="ind-step-2" class="step-dot">2. Anamnese</span>
             </div>
 
             <form id="form-cadastro-aluno" onsubmit="event.preventDefault();" class="modal-form">
@@ -229,7 +255,7 @@
                             <input id="aluno-email" class="form-input" type="email" placeholder="email@fitsync.com" required>
                         </div>
                         <div class="form-group">
-                            <label cover="aluno-password">Senha Temporária</label>
+                            <label for="aluno-password">Senha Temporária</label>
                             <input id="aluno-password" class="form-input" type="password" placeholder="Mínimo 6 dig" required>
                         </div>
                     </div>
@@ -285,7 +311,7 @@
 
                     <div class="form-actions" style="margin-top: 20px;">
                         <button type="button" class="secondary-button" onclick="etapaAnteriorCadastro()">⬅ Voltar</button>
-                        <button type="button" class="primary-button" onclick="cadastrarAluno()">💾 Salvar Cadastro</button>
+                        <button type="button" class="primary-button" onclick="cadastrarAluno()">Salvar Cadastro</button>
                     </div>
                 </div>
 
@@ -294,25 +320,65 @@
     </div>
 
     <div class="modal-overlay hidden" id="cadastro-exercicio-modal">
-        <div class="modal-card">
+        <div class="modal-card" style="max-width: 900px; max-height: 90vh; overflow-y: auto;">
             <div class="modal-header">
                 <div>
-                    <p class="eyebrow">Nova Categoria</p>
-                    <h3>Cadastrar Exercício</h3>
+                    <p class="eyebrow">Gerenciador de Exercícios</p>
+                    <h3>Cadastrar Novo Exercício</h3>
                 </div>
                 <button class="close-modal" onclick="fecharModalCadastroExercicio()">×</button>
             </div>
 
-            <form id="form-cadastro-exercicio" onsubmit="event.preventDefault(); cadastrarExercicio();" class="modal-form">
-                <div class="form-group">
-                    <label for="exercicio-nome">Nome do Exercício</label>
-                    <input id="exercicio-nome" class="form-input" type="text" placeholder="Ex: Supino Reto com Barra" required>
-                </div>
+            <div style="display: flex; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 15px 20px;">
+                <button type="button" class="tab-button" id="tab-criar" onclick="mostrarAbaExercicio('criar')" style="padding: 10px 20px; background: #39FF14; color: #000; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Criar Novo</button>
+                <button type="button" class="tab-button" id="tab-visualizar" onclick="mostrarAbaExercicio('visualizar')" style="padding: 10px 20px; background: transparent; color: #ccc; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; cursor: pointer;">Ver Existentes</button>
+            </div>
 
-                <div class="form-group">
-                    <label for="exercicio-grupo">Grupo Muscular</label>
-                    <select id="exercicio-grupo" class="form-input" style="background: #141414;" required>
-                        <option value="" disabled selected>Selecione uma categoria</option>
+            <div id="aba-criar" style="padding: 20px;">
+                <form id="form-cadastro-exercicio" onsubmit="event.preventDefault(); cadastrarExercicio();" class="modal-form">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="form-group">
+                            <label for="exercicio-nome">Nome do Exercício</label>
+                            <input id="exercicio-nome" class="form-input" type="text" placeholder="Ex: Supino Reto com Barra" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exercicio-grupo">Grupo Muscular</label>
+                            <select id="exercicio-grupo" class="form-input" style="background: #141414;" required>
+                                <option value="" disabled selected>Selecione</option>
+                                <option value="Peito">Peito</option>
+                                <option value="Costas">Costas</option>
+                                <option value="Pernas">Pernas</option>
+                                <option value="Ombros">Ombros</option>
+                                <option value="Bíceps">Bíceps</option>
+                                <option value="Tríceps">Tríceps</option>
+                                <option value="Abdômen">Abdômen</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exercicio-desc">Descrição Técnica</label>
+                        <textarea id="exercicio-desc" class="form-textarea" placeholder="Descreva a execução, postura correta, respiração, etc..." style="background: #141414;"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exercicio-url">Link do Vídeo (Opcional)</label>
+                        <input id="exercicio-url" class="form-input" type="url" placeholder="https://youtube.com/watch?v=..." style="background: #141414;">
+                    </div>
+
+                    <div class="form-actions" style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button type="button" class="secondary-button" onclick="fecharModalCadastroExercicio()">Cancelar</button>
+                        <button type="submit" class="primary-button" style="flex: 1;">Salvar Exercício</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="aba-visualizar" style="display: none; padding: 20px;">
+                <div style="margin-bottom: 20px;">
+                    <label style="color: #888; font-size: 0.9rem;">Filtrar por grupo muscular:</label>
+                    <select id="filtro-visualizar-grupo" class="form-input" style="background: #141414; margin-top: 8px;" onchange="filtrarExerciciosModal()">
+                        <option value="">Todos os grupos</option>
                         <option value="Peito">Peito</option>
                         <option value="Costas">Costas</option>
                         <option value="Pernas">Pernas</option>
@@ -323,21 +389,8 @@
                     </select>
                 </div>
 
-                <div class="form-group">
-                    <label for="exercicio-desc">Descrição Técnica / Instruções</label>
-                    <textarea id="exercicio-desc" class="form-textarea" placeholder="Ex: Escápulas retraídas, barra tocando o terço inferior do peitoral..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="exercicio-url">URL do Vídeo Demonstrativo (Opcional)</label>
-                    <input id="exercicio-url" class="form-input" type="url" placeholder="https://youtube.com/watch?v=...">
-                </div>
-
-                <div class="form-actions">
-                    <button type="button" class="secondary-button" onclick="fecharModalCadastroExercicio()">Cancelar</button>
-                    <button type="submit" class="primary-button">Salvar Exercício</button>
-                </div>
-            </form>
+                <div id="lista-exercicios-modal" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; max-height: 500px; overflow-y: auto;"></div>
+            </div>
         </div>
     </div>
 
@@ -361,6 +414,30 @@
         </div>
     </div>
 
-    <script src="js/dashboard_personal.js"></script>
+    <div class="modal-overlay hidden" id="ficha-treino-modal">
+        <div class="modal-card" style="max-width: 900px; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header">
+                <div>
+                    <p class="eyebrow">Ficha de Treino</p>
+                    <h3 id="modal-ficha-title">Detalhes da Ficha</h3>
+                </div>
+                <button class="close-modal" onclick="fecharModalFicha()">×</button>
+            </div>
+
+            <div id="modal-ficha-body" class="dashboard-message">
+                <p>Carregando ficha de treino...</p>
+            </div>
+            
+            <div class="form-actions" style="margin-top: 24px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 16px;">
+                <button type="button" class="secondary-button" onclick="fecharModalFicha()" style="width: 100%;">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/personal/api.js"></script>
+    <script src="js/personal/ui.js"></script>
+    <script src="js/personal/handlers.js"></script>
+    <script src="js/personal/main.js"></script>
+
 </body>
 </html>

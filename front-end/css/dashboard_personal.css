@@ -335,6 +335,20 @@ body, html {
     border-color: #39FF14;
 }
 
+.form-input[type="text"],
+.form-input[type="email"],
+.form-input[type="number"],
+select.form-input {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #fff;
+}
+
+select.form-input option {
+    background: #1a1a1a;
+    color: #fff;
+}
+
 .form-textarea {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(255, 255, 255, 0.08);

@@ -6,7 +6,7 @@ function autenticado(req, res, next) {
 
     if (!authHeader) {
         return res.status(401).json({
-            erro: 'Token não enviado'
+            erro: 'Token nao enviado'
         });
     }
 
@@ -18,13 +18,13 @@ function autenticado(req, res, next) {
             process.env.JWT_SECRET
         );
 
-        // Guarda os dados decodificados (id e tipo) para os próximos middlewares ou rotas [cite: 42]
+        // Guarda os dados decodificados para as proximas rotas
         req.usuario = decoded;
         next();
 
     } catch (error) {
         return res.status(401).json({
-            erro: 'Token inválido'
+            erro: 'Token invalido'
         });
     }
 }
