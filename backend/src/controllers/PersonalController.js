@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const connection = require('../database');
+const connection = require('../config/database');
 
 class PersonalController {
     async cadastrar(req, res) {

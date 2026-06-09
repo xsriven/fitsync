@@ -1,6 +1,6 @@
 const express = require('express');
 const ExercicioController = require('../controllers/ExercicioController');
-const { autenticado, apenasPersonal } = require('../auth');
+const { autenticado, apenasPersonal } = require('../config/auth');
 
 const router = express.Router();
 

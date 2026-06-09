@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const connection = require('../database');
+const connection = require('../config/database');
 
 class AuthController {
     async login(req, res) {
@@ -25,7 +25,7 @@ class AuthController {
 
             if (tipo_usuario && usuario.tipo_usuario !== tipo_usuario.toUpperCase()) {
                 return res.status(403).json({
-                    erro: `Acesso negado. Esta conta esta registrada como ${usuario.tipo_usuario} e nao tem permissao para acessar este portal.`
+                    erro: `Email ou senha invalidos`
                 });
             }
 
