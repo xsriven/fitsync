@@ -1,7 +1,6 @@
 const API_URL = 'http://localhost:3000';
 const token = localStorage.getItem('token');
 
-// Redireciona caso não haja sessão ativa
 if (!token) {
     window.location.href = 'login.html';
 }
@@ -68,6 +67,18 @@ const ApiService = {
         return res.json();
     },
 
+    async excluirFichaTreino(fichaId) {
+        const res = await fetch(`${API_URL}/fichas-treino/${fichaId}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.erro || 'Erro ao deletar ficha.');
+        }
+        return res.json();
+    },
+
     async getDetalhesFicha(fichaId) {
         const res = await fetch(`${API_URL}/fichas-treino/${fichaId}`, {
             headers: { 'Authorization': `Bearer ${token}` }
@@ -77,7 +88,7 @@ const ApiService = {
     },
 
     async salvarDivisaoFicha(dados) {
-        const res = await fetch(`${API_URL}/fichas-treino`, {
+        const res = await fetch(`${API_URL}/fichas-treino/divisoes`, { 
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -92,3 +103,4 @@ const ApiService = {
         return res.json();
     }
 };
+

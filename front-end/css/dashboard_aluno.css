@@ -513,3 +513,7 @@ tbody tr:hover {
         display: none;
     }
 }
+
+.no-print {
+    display: none !important;
+}

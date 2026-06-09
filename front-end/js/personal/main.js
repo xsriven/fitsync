@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const userData = JSON.parse(localStorage.getItem('usuario') || 'null');
     
-    // Atualiza o cabeçalho/sidebar com o nome do Personal logado
     if (userData && userData.nome) {
         const txtNome = document.getElementById('usuario-nome');
         const txtGreeting = document.getElementById('userGreeting');
@@ -9,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (txtGreeting) txtGreeting.textContent = `Olá, ${userData.nome}`;
     }
 
-    // Carrega os dados assincronamente da API e renderiza as seções iniciais
     async function inicializarDashboard() {
         try {
             const [alunos, fichas, exercicios] = await Promise.all([
@@ -26,9 +24,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Listeners de Input para filtros em tempo real
+    // Eventos e filtros da interface
     document.getElementById('searchBox')?.addEventListener('input', Handlers.filtrarAlunosInput);
     document.getElementById('filtro-grupo-muscular')?.addEventListener('change', Handlers.filtrarExercicios);
+    
+    // ATIVAÇÃO DO AUTOCOMPLETE DE ALUNOS NA FICHA DE TREINO
+    document.getElementById('busca-aluno-ficha')?.addEventListener('keyup', Handlers.filtrarAlunosParaFicha);
 
     // Gerenciador de fechamento de Modais clicando fora da caixa
     window.addEventListener('click', event => {
@@ -54,8 +55,8 @@ window.fecharModalAluno = () => document.getElementById('aluno-modal')?.classLis
 window.fecharModalFicha = () => document.getElementById('ficha-treino-modal')?.classList.add('hidden');
 window.fecharModalCadastroAluno = () => document.getElementById('cadastro-aluno-modal')?.classList.add('hidden');
 window.fecharModalCadastroExercicio = () => document.getElementById('cadastro-exercicio-modal')?.classList.add('hidden');
-window.abrirModalCadastroAluno = () => document.getElementById('cadastro-aluno-modal')?.classList.remove('hidden');
-window.abrirModalCadastroExercicio = () => document.getElementById('cadastro-exercicio-modal')?.remove('hidden');
+window.abrirModalCadastroAluno = () => document.getElementById('cadastro-aluno-modal').classList.remove('hidden');
+window.abrirModalCadastroExercicio = () => document.getElementById('cadastro-exercicio-modal').classList.remove('hidden');
 window.adicionarExercicio = () => Handlers.adicionarLinhaExercicio();
 window.salvarDivisaoTreino = () => Handlers.submeterDivisaoTreino();
 

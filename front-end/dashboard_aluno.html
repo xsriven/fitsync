@@ -15,7 +15,6 @@
         
         <aside class="sidebar">
             <div class="brand-box">
-                <span class="logo-dot"></span>
                 <div class="brand-text">
                     <strong>FitSync</strong>
                     <span>Área do Aluno</span>
@@ -28,10 +27,10 @@
             </div>
 
             <nav class="sidebar-nav">
-                <button class="sidebar-link active" onclick="showSection('meu-treino')">💪 Meu Treino Ativo</button>
-                <button class="sidebar-link" onclick="showSection('historico')">📅 Histórico de Treinos</button>
-                <button class="sidebar-link" onclick="showSection('evolucao')">📈 Minha Evolução</button>
-                <button class="sidebar-link" onclick="showSection('perfil')">⚙️ Meu Perfil</button>
+                <button class="sidebar-link active" onclick="showSection('meu-treino')">Meu Treino Ativo</button>
+                <button class="sidebar-link" onclick="showSection('historico')">Histórico de Treinos</button>
+                <button class="sidebar-link" onclick="showSection('evolucao')">Minha Evolução</button>
+                <button class="sidebar-link" onclick="showSection('perfil')">Meu Perfil</button>
             </nav>
 
             <div class="sidebar-footer">
@@ -68,7 +67,8 @@
                     </div>
 
                     <div class="section-title-row">
-                        <h2>💪 Minha Ficha de Treino Ativa</h2>
+                        <h2>Minha Ficha de Treino Ativa</h2>
+                
                         <button class="primary-button" onclick="abrirModalRegistrarTreino()">Check-in / Registrar Treino</button>
                     </div>
 
@@ -81,7 +81,7 @@
 
                 <section id="historico" class="content-section" style="display:none;">
                     <div class="section-title-row">
-                        <h2>📅 Histórico de Execuções</h2>
+                        <h2>Histórico de Execuções</h2>
                     </div>
 
                     <div class="table-container">
@@ -106,7 +106,7 @@
 
                 <section id="evolucao" class="content-section" style="display:none;">
                     <div class="section-title-row">
-                        <h2>📈 Evolução Física e Composição Corporal</h2>
+                        <h2>Evolução Física e Composição Corporal</h2>
                         <button class="primary-button" onclick="abrirModalAtualizarDados()">Atualizar Peso / Altura</button>
                     </div>
 
@@ -219,6 +219,11 @@
         </div>
     </div>
 
-    <script src="js/dashboard_aluno.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="js/aluno/api.js"></script>
+    <script src="js/aluno/ui.js"></script>
+    <script src="js/aluno/handlers.js"></script>
+    <script src="js/aluno/main.js"></script>
+    
 </body>
 </html>
