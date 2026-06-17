@@ -1,171 +1,91 @@
-const bcrypt = require('bcrypt');
-const connection = require('../config/database');
+const AlunoService = require('../services/AlunoService');
 
 class AlunoController {
+    
+    // Processa o cadastro transacional completo do aluno
     async cadastrar(req, res) {
         try {
             const personalId = req.usuario.id;
-            const { 
-                nome, email, senha, objetivo, data_nascimento,
-                peso, altura, historico_lesoes, restricoes_fisicas, condicoes_medicas
-            } = req.body;
-
-            const [emailExiste] = await connection.execute(
-                'SELECT id FROM usuarios WHERE email = ?',
-                [email]
-            );
-
-            if (emailExiste.length > 0) {
-                return res.status(400).json({ erro: 'Email ja cadastrado' });
-            }
-
-            if (peso < 20 || peso > 300 || altura < 1.00 || altura > 2.50) {
-                return res.status(400).json({
-                    erro: 'Valores corporais fora dos limites permitidos (Peso: 20-300kg, Altura: 1.00-2.50m).'
-                });
-            }
-
-            const senhaHash = await bcrypt.hash(senha, 10);
-
-            const [usuarioResult] = await connection.execute(
-                'INSERT INTO usuarios (nome, email, senha, tipo_usuario) VALUES (?, ?, ?, ?)',
-                [nome, email, senhaHash, 'ALUNO']
-            );
-
-            const usuarioId = usuarioResult.insertId;
-
-            await connection.execute(
-                'INSERT INTO alunos (id_usuario, data_nascimento, objetivo, personal_id) VALUES (?, ?, ?, ?)',
-                [usuarioId, data_nascimento, objetivo, personalId]
-            );
-
-            await connection.execute(
-                'INSERT INTO evolucao_fisica (aluno_id, peso, altura) VALUES (?, ?, ?)',
-                [usuarioId, peso, altura]
-            );
-
-            await connection.execute(
-                'INSERT INTO anamneses (aluno_id, historico_lesoes, restricoes_fisicas, condicoes_medicas) VALUES (?, ?, ?, ?)',
-                [usuarioId, historico_lesoes, restricoes_fisicas, condicoes_medicas]
-            );
+            
+            // Repassa os dados coletados no corpo da requisição para o serviço processar
+            await AlunoService.cadastrarAluno(personalId, req.body);
 
             return res.status(201).json({
                 mensagem: 'Aluno, Avaliacao Corporal e Ficha de Anamnese cadastrados com sucesso!'
             });
         } catch (error) {
+            // Captura erros de validações e regras de negócio lançadas pelo Service
+            if (error.message === 'Email ja cadastrado' || error.message.includes('fora dos limites')) {
+                return res.status(400).json({ erro: error.message });
+            }
             console.error(error);
             return res.status(500).json({ erro: 'Erro interno ao processar cadastro transacional do aluno.' });
         }
     }
 
+    // Lista os alunos respeitando o escopo do usuário autenticado
     async listar(req, res) {
         try {
-            // Adicionado u.id AS id_usuario para suportar os mapeamentos legados do front-end
-            let query = `
-                SELECT u.id, u.id AS id_usuario, u.nome, u.email, a.objetivo, a.data_nascimento
-                FROM usuarios u
-                INNER JOIN alunos a ON u.id = a.id_usuario
-            `;
-            let params = [];
             const userRole = req.usuario.tipo || req.usuario.tipo_usuario;
+            const usuarioId = req.usuario.id;
 
-            if (userRole === 'ALUNO') {
-                query += ' WHERE u.id = ?';
-                params.push(req.usuario.id);
-            } else if (userRole === 'PERSONAL') {
-                query += ' WHERE a.personal_id = ?';
-                params.push(req.usuario.id);
-            }
-
-            const [rows] = await connection.execute(query, params);
-            return res.json(rows);
+            const alunos = await AlunoService.listarAlunos(userRole, usuarioId);
+            return res.json(alunos);
         } catch (error) {
             console.error(error);
             return res.status(500).json({ erro: 'Erro ao buscar alunos' });
         }
     }
-async listarEvolucaoFisica(req, res) {
+
+    // Carrega o histórico de pesagem do aluno
+    async listarEvolucaoFisica(req, res) {
         try {
             const alunoId = req.usuario.id;
-
-            // Busca o histórico temporal de medidas cadastrado para o aluno logado
-            const [rows] = await connection.execute(
-                'SELECT id, peso, altura, data_registro FROM evolucao_fisica WHERE aluno_id = ? ORDER BY data_registro ASC',
-                [alunoId]
-            );
-
-            return res.json(rows);
+            const historico = await AlunoService.listarEvolucaoFisica(alunoId);
+            return res.json(historico);
         } catch (error) {
             console.error(error);
             return res.status(500).json({ erro: 'Erro interno ao carregar o historico de evolucao fisica.' });
         }
     }
 
+    // Adiciona uma nova medição de evolução para o histórico
     async registrarEvolucaoFisica(req, res) {
         try {
             const alunoId = req.usuario.id;
             const { peso, altura } = req.body;
 
-            // RN-006: Restrição Fisiológica Padrão do Back-end
-            if (peso < 20 || peso > 300 || altura < 1.00 || altura > 2.50) {
-                return res.status(400).json({
-                    erro: 'Valores corporais fora dos limites permitidos (Peso: 20-300kg, Altura: 1.00-2.50m).'
-                });
-            }
+            await AlunoService.registrarNovaEvolucao(alunoId, peso, altura);
 
-            // Insere a nova pesagem no histórico temporal
-            await connection.execute(
-                'INSERT INTO evolucao_fisica (aluno_id, peso, altura) VALUES (?, ?, ?)',
-                [alunoId, peso, altura]
-            );
-
-            return res.status(201).json({ mensagem: 'Dados corporais atualizados e IMC recalculado com sucesso!' });
+            return res.status(201).json({ 
+                mensagem: 'Dados corporais atualizados e IMC recalculado com sucesso!' 
+            });
         } catch (error) {
+            if (error.message.includes('fora dos limites')) {
+                return res.status(400).json({ erro: error.message });
+            }
             console.error(error);
             return res.status(500).json({ erro: 'Erro interno ao salvar novos indicadores fisiologicos.' });
         }
     }
+
+    // Carrega o prontuário de anamnese e check-ins detalhados do aluno
     async buscarPorId(req, res) {
         try {
             const alunoId = req.params.id;
             const userRole = req.usuario.tipo || req.usuario.tipo_usuario;
             const logadoId = req.usuario.id;
 
-            const query = `
-                SELECT u.id, u.id AS id_usuario, u.nome, u.email, a.objetivo, a.data_nascimento, a.personal_id,
-                       an.historico_lesoes, an.restricoes_fisicas, an.condicoes_medicas
-                FROM usuarios u
-                INNER JOIN alunos a ON u.id = a.id_usuario
-                LEFT JOIN anamneses an ON u.id = an.aluno_id
-                WHERE u.id = ?
-            `;
-
-            const [rows] = await connection.execute(query, [alunoId]);
-
-            if (rows.length === 0) {
-                return res.status(404).json({ erro: 'Aluno nao encontrado no ecossistema FitSync.' });
-            }
-
-            const aluno = rows[0];
-
-            if (userRole === 'PERSONAL' && aluno.personal_id !== logadoId) {
-                return res.status(403).json({ erro: 'Acesso negado. Este aluno pertence a carteira de outro Personal Trainer.' });
-            }
-
-            
-            const [checkins] = await connection.execute(
-                `SELECT id, data_execucao, observacoes 
-                 FROM execucoes_treino 
-                 WHERE aluno_id = ? 
-                 ORDER BY data_execucao DESC LIMIT 10`,
-                [alunoId]
-            );
-
-            // Anexa a lista de check-ins dentro do objeto do aluno
-            aluno.checkins = checkins;
-
-            return res.json(aluno);
+            const prontuario = await AlunoService.buscarProntuarioPorId(alunoId, userRole, logadoId);
+            return res.json(prontuario);
         } catch (error) {
+            // Trata as exceções de segurança e existência lançadas na camada Service
+            if (error.message.includes('nao encontrado')) {
+                return res.status(404).json({ erro: error.message });
+            }
+            if (error.message.includes('Acesso negado')) {
+                return res.status(403).json({ erro: error.message });
+            }
             console.error(error);
             return res.status(500).json({ erro: 'Erro interno ao processar a busca do prontuario.' });
         }

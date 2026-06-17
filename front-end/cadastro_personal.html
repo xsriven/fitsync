@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro Personal Trainer - FitSync</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+    <div class="bg-fundo"></div>
+    <div class="bg-overlay"></div>
+
+    <div class="hero-container">
+        <div class="login-card split-card">
+            
+            <div class="card-column form-side">
+                <h1>Criar Conta <span class="neon-text">Técnica</span></h1>
+                <p class="subtitle">Cadastre-se para gerenciar treinos e alunos com alta performance.</p>
+                
+                <form id="cadastroPersonalForm">
+                    <label for="nome">Nome Completo</label>
+                    <input id="nome" type="text" name="nome" placeholder="Digite seu nome" required>
+
+                    <label for="email">E-mail Profissional</label>
+                    <input id="email" type="email" name="email" placeholder="Insira seu e-mail de trabalho" required>
+
+                    <label for="registro_profissional">Registro Profissional (CREF)</label>
+                    <input id="registro_profissional" type="text" name="registro_profissional" placeholder="Ex: 000000-G/SP" required>
+
+                    <label for="password">Senha de Acesso</label>
+                    <input id="password" type="password" name="password" placeholder="Crie uma senha forte" required>
+
+                    <button id="cadastroButton" type="submit">Finalizar Cadastro</button>
+                </form>
+                <div id="message" class="message"></div>
+            </div>
+
+            <div class="vertical-divider"></div>
+
+            <div class="card-column action-side">
+                <h2>Já possui <span class="neon-text">Acesso</span>?</h2>
+                <p class="action-description">Se você já concluiu seu credenciamento na plataforma, clique abaixo para acessar seu painel técnico agora mesmo.</p>
+                
+                <a href="login_personal.html" class="btn-secondary-neon">Ir Para o Login</a>
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>FitSync &copy; 2026 - Gestão Inteligente de Treinos.</p>
+    </footer>
+
+    <script src="js/auth/api.js"></script>
+    <script src="js/auth/ui.js"></script>
+    <script src="js/auth/cadastro_personal.js"></script>
+</body>
+</html>

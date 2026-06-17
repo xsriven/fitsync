@@ -1,11 +1,15 @@
-const connection = require('../config/database');
+// Importa o serviço que criamos, tirando o 'connection' direto daqui
+const ExercicioService = require('../services/ExercicioService');
 
 class ExercicioController {
+    
+    // Método chamado pela rota GET /exercicios
     async listar(req, res) {
         try {
-            const [exercicios] = await connection.execute(
-                'SELECT id, nome, grupo_muscular, descricao, url_execucao FROM exercicios ORDER BY nome ASC'
-            );
+            // Chama a regra de negócio para listar os exercícios
+            const exercicios = await ExercicioService.listarExercicios();
+            
+            // Retorna o JSON com a lista para o front-end
             return res.json(exercicios);
         } catch (error) {
             console.error(error);
@@ -13,24 +17,27 @@ class ExercicioController {
         }
     }
 
+    // Método chamado pela rota POST /exercicios
     async cadastrar(req, res) {
         try {
             const { nome, grupo_muscular, descricao, url_execucao } = req.body;
 
-            if (!nome || !grupo_muscular) {
-                return res.status(400).json({ erro: 'Nome e Grupo Muscular sao obrigatorios.' });
-            }
+            // Devolve a responsabilidade de criação e validação para o Service
+            const exercicioId = await ExercicioService.cadastrarExercicio({
+                nome, grupo_muscular, descricao, url_execucao
+            });
 
-            const [resultado] = await connection.execute(
-                'INSERT INTO exercicios (nome, grupo_muscular, descricao, url_execucao) VALUES (?, ?, ?, ?)',
-                [nome, grupo_muscular, descricao || null, url_execucao || null]
-            );
-
+            // Responde com o status de criado (201) e o ID gerado
             return res.status(201).json({
                 mensagem: 'Exercicio cadastrado com sucesso!',
-                id: resultado.insertId
+                id: exercicioId
             });
         } catch (error) {
+            // Se o Service lançou o erro de validação (campos obrigatórios), mandamos status 400 (Bad Request)
+            if (error.message.includes('obrigatorio')) {
+                return res.status(400).json({ erro: error.message });
+            }
+            
             console.error(error);
             return res.status(500).json({ erro: 'Erro ao cadastrar exercicio' });
         }

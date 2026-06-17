@@ -1,4 +1,4 @@
-// Script de navegação da página inicial
+
 const startBtn = document.getElementById('startBtn');
 const userForm = document.getElementById('userForm');
 
