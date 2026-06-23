@@ -5,7 +5,7 @@ class PersonalController {
         try {
             const { nome, email, password, registro_profissional } = req.body;
 
-            // Chama o serviço responsável por criar o Personal Trainer
+            // Chama o serviço responsável por criar o personal trainer
             const usuarioId = await UsuarioService.cadastrarPersonal({
                 nome, email, password, registro_profissional
             });

@@ -1,11 +1,10 @@
-// O ficheiro de configuração que tu já tens para ligar ao MySQL
 const connection = require('../config/database');
 
 class UsuarioRepository {
 
-    // Esta função vai ao banco procurar um utilizador pelo e-mail dele
+    // vai ao banco procurar um usuario pelo e-mail dele
     async buscarPorEmail(email) {
-        // Faz a query pura e simples no banco
+     
         const [rows] = await connection.execute(
             'SELECT * FROM usuarios WHERE email = ?',
             [email]
@@ -14,13 +13,13 @@ class UsuarioRepository {
         return rows.length > 0 ? rows[0] : null;
     }
 
-    // Cria o registo base na tabela geral de utilizadores (tanto para Personal como Aluno)
+    // Cria o registo base na tabela geral de usuario tanto para Personal como Aluno
     async criarUsuario(nome, email, senhaHash, tipoUsuario) {
         const [resultado] = await connection.execute(
             'INSERT INTO usuarios (nome, email, senha, tipo_usuario) VALUES (?, ?, ?, ?)',
             [nome, email, senhaHash, tipoUsuario]
         );
-        // Retorna o ID gerado pelo banco de dados (o insertId)
+        // Retorna o ID gerado pelo banco de dados
         return resultado.insertId;
     }
 

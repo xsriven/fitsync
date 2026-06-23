@@ -24,7 +24,7 @@ class TreinoController {
         }
     }
 
-    // Lista as fichas gerenciadas pelo personal trainer autenticado
+    // Lista as fichas gerenciadas pelo personal trainer
     async listarFichas(req, res) {
         try {
             const personalId = req.usuario.id;
@@ -88,7 +88,7 @@ class TreinoController {
         }
     }
 
-    // Registra a conclusão do treino do dia (Check-in)
+    // Registra a conclusão do treino do dia
     async registrarExecucao(req, res) {
         try {
             const alunoId = req.usuario.id;

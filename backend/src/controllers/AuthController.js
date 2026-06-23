@@ -14,7 +14,7 @@ class AuthController {
                 ...resultado
             });
         } catch (error) {
-            // Se o Service disparou um throw new Error(), nós apanhamos aqui
+            // Se o Service disparou um throw new Error(), pegamos por aqui
             if (error.message === 'Email ou senha invalidos') {
                 return res.status(401).json({ erro: error.message });
             }

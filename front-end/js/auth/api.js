@@ -2,7 +2,7 @@
  * Comunicação direta com os endpoints de autenticação do Back-end.
  */
 class AuthApi {
-    // Faz a requisição POST para o nosso novo AuthController no back-end
+    // Faz a requisição POST para o nosso AuthController no back-end
     async realizarLogin(email, password, userType) {
         const response = await fetch("http://localhost:3000/login", {
             method: "POST",
@@ -23,10 +23,10 @@ class AuthApi {
             throw new Error(data.erro || "Falha ao fazer login.");
         }
 
-        // Se deu bom, devolve os dados (token, usuário, etc.)
+        // Se deu bom, devolve os dados
         return data;
     }
-    // Adicione este método dentro da sua classe AuthApi atual:
+
 async realizarCadastroPersonal(nome, email, password, registro_profissional) {
     const response = await fetch("http://localhost:3000/personal-trainers", {
         method: "POST",
@@ -43,7 +43,7 @@ async realizarCadastroPersonal(nome, email, password, registro_profissional) {
 
     const data = await response.json();
 
-    // Se o back-end recusar o cadastro (e-mail duplicado ou falta de CREF)
+    // Se o back-end recusar o cadastro
     if (!response.ok) {
         throw new Error(data.erro || "Falha ao realizar o cadastro.");
     }

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Personal - FitSync</title>
+    <title>Personal Trainer - FitSync</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/dashboard_personal.css">
 </head>
@@ -44,7 +44,7 @@
             <header class="dashboard-header">
                 <div>
                     <p class="eyebrow">Personal</p>
-                    <h1 id="userGreeting">Gerenciador de Treinos</h1>
+                    <h1 id="userGreeting">Gerenciador de treinos</h1>
                     <p class="subtitle">Gerencie seus alunos, treinos e progressão de carga.</p>
                 </div>
             </header>
@@ -65,7 +65,7 @@
 
                     <div class="section-title-row">
                         <h2>Listagem de alunos</h2>
-                        <button class="primary-button" onclick="abrirModalCadastroAluno()">+ Novo Aluno</button>
+                        <button class="primary-button" onclick="abrirModalCadastroAluno()">+ Novo aluno</button>
                     </div>
 
                     <div id="alunos-container" class="alunos-container"></div>
@@ -74,7 +74,7 @@
                 <section id="treinos" class="content-section" style="display:none;">
                     <div class="section-title-row">
                         <h2>Meus treinos cadastrados</h2>
-                        <button class="primary-button" onclick="showSection('criar-treino')">+ Novo Treino</button>
+                        <button class="primary-button" onclick="showSection('criar-treino')">+ Novo treino</button>
                     </div>
 
                     <div class="table-container">
@@ -82,8 +82,8 @@
                             <thead>
                                 <tr>
                                     <th>Aluno</th>
-                                    <th>E-mail do Aluno</th>
-                                    <th>Nº de Divisões</th>
+                                    <th>E-mail do aluno</th>
+                                    <th>Nº de divisões</th>
                                     <th>Status</th>
                                     <th>Ações</th>
                                 </tr>
@@ -110,7 +110,7 @@
                     <div class="workout-builder-panel">
 
                         <div class="form-group custom-select-wrapper" style="position: relative;">
-                            <label class="form-label">Aluno Alvo</label>
+                            <label class="form-label">Aluno alvo</label>
                             <div class="aluno-input-container">
                                 <input type="text" class="form-input" id="busca-aluno-ficha"
                                     placeholder="Digitar nome..." onkeyup="Handlers.filtrarAlunosParaFicha()"
@@ -130,7 +130,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Dia Previsto</label>
+                            <label class="form-label">Dia previsto</label>
                             <select class="form-input" id="divisao-ordem">
                                 <option value="1">Segunda-feira</option>
                                 <option value="2">Terça-feira</option>
@@ -177,7 +177,7 @@
                                 <option value="Tríceps">Tríceps</option>
                                 <option value="Abdômen">Abdômen</option>
                             </select>
-                            <button class="primary-button" onclick="abrirModalCadastroExercicio()">+ Novo Exercício</button>
+                            <button class="primary-button" onclick="abrirModalCadastroExercicio()">+ Novo exercício</button>
                         </div>
                     </div>
 
@@ -304,8 +304,8 @@
         <div class="modal-card" style="max-width: 900px; max-height: 90vh; overflow-y: auto;">
             <div class="modal-header">
                 <div>
-                    <p class="eyebrow">Gerenciador de Exercícios</p>
-                    <h3>Cadastrar Novo Exercício</h3>
+                    <p class="eyebrow">Gerenciador de exercícios</p>
+                    <h3>Cadastrar novo exercício</h3>
                 </div>
                 <button class="close-modal" onclick="fecharModalCadastroExercicio()">×</button>
             </div>
@@ -314,12 +314,12 @@
                 <form id="form-cadastro-exercicio" onsubmit="event.preventDefault(); Handlers.submeterNovoExercicio();" class="modal-form">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                         <div class="form-group">
-                            <label for="exercicio-nome">Nome do Exercício</label>
+                            <label for="exercicio-nome">Nome do exercício</label>
                             <input id="exercicio-nome" class="form-input" type="text" placeholder="Ex: Supino Reto com Barra" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="exercicio-grupo">Grupo Muscular</label>
+                            <label for="exercicio-grupo">Grupo muscular</label>
                             <select id="exercicio-grupo" class="form-input" style="background: #141414;" required>
                                 <option value="" disabled selected>Selecione</option>
                                 <option value="Peito">Peito</option>

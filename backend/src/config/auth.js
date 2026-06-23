@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-// Autenticação: valida token JWT e anexa dados do usuário na requisição
+// valida token JWT e anexa dados do usuário na requisição
 function autenticado(req, res, next) {
     const authHeader = req.headers.authorization;
 
@@ -29,14 +29,14 @@ function autenticado(req, res, next) {
     }
 }
 
-// Autorização: permite somente Personal Trainers
+// permite somente Personal Trainers
 function apenasPersonal(req, res, next) {
     const userRole = req.usuario && (req.usuario.tipo || req.usuario.tipo_usuario);
     if (userRole === 'PERSONAL') return next();
     return res.status(403).json({ erro: 'Acesso negado. Recurso exclusivo para Personal Trainers.' });
 }
 
-// Autorização: permite somente Alunos
+// permite somente Alunos
 function apenasAluno(req, res, next) {
     const userRole = req.usuario && (req.usuario.tipo || req.usuario.tipo_usuario);
     if (userRole === 'ALUNO') return next();

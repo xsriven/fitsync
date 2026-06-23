@@ -10,14 +10,14 @@ describe('Testes de Integração - Módulo de Exercícios', () => {
     beforeAll(() => {
         process.env.JWT_SECRET = process.env.JWT_SECRET || 'teste_secret_chave';
         
-        // 1. Token válido de Personal Trainer
+        // 1. Token válido de personal trainer
         tokenPersonal = jwt.sign(
             { id: 1, tipo: 'PERSONAL' },
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
         );
 
-        // 2. Token de Aluno (Para testes de restrição de acesso)
+        // 2. Token de aluno para testes de restrição de acesso
         tokenAluno = jwt.sign(
             { id: 2, tipo: 'ALUNO' },
             process.env.JWT_SECRET,
@@ -62,7 +62,7 @@ describe('Testes de Integração - Módulo de Exercícios', () => {
         expect(achouExercicio).toBeDefined();
     });
 
-    // TESTE 3: Segurança - Bloqueio por falta de Token
+    // TESTE 3: Teste de segurança - Bloqueio por falta de Token
     it('3. Deve rejeitar o cadastro de exercicio se nenhum token for enviado', async () => {
         const response = await request(app)
             .post('/exercicios')
@@ -71,7 +71,7 @@ describe('Testes de Integração - Módulo de Exercícios', () => {
         expect(response.status).toBe(401); // Não autorizado
     });
 
-    // TESTE 4: Segurança - Bloqueio por Nível de Acesso
+    // TESTE 4: Teste de segurança - Bloqueio por nível de acesso
     it('4. Deve barrar o cadastro se o usuario logado for um ALUNO', async () => {
         const response = await request(app)
             .post('/exercicios')

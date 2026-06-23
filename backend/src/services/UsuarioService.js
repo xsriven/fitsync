@@ -1,17 +1,17 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-// O Service precisa do Repository para mandar ler/gravar coisas no banco
+
 const UsuarioRepository = require('../repositories/UsuarioRepository');
 
 class UsuarioService {
 
-    // Lógica do Login do utilizador
+    // Lógica de Login do usuario
     async autenticar({ email, password, tipo_usuario }) {
         // 1. Pergunta ao repositório se o e-mail existe
         const usuario = await UsuarioRepository.buscarPorEmail(email);
         
         if (!usuario) {
-            // Se não achar o utilizador, lançamos um erro amigável
+            // Se não achar o usuario, lançamos um erro
             throw new Error('Email ou senha invalidos');
         }
 
@@ -21,7 +21,7 @@ class UsuarioService {
             throw new Error('Email ou senha invalidos');
         }
 
-        // 3. Valida se o tipo do utilizador bate com o que o front enviou (PERSONAL ou ALUNO)
+        // 3. Valida se o tipo do usuario bate com o que o front enviou (PERSONAL ou ALUNO)
         if (tipo_usuario && usuario.tipo_usuario !== tipo_usuario.toUpperCase()) {
             throw new Error('Email ou senha invalidos');
         }
@@ -47,7 +47,7 @@ class UsuarioService {
 
     // Lógica para registar um novo Personal Trainer
     async cadastrarPersonal({ nome, email, password, registro_profissional }) {
-        // Validação obrigatória da arquitetura: tem de ter o registo profissional do conselho de educação física
+        // Validação obrigatória, tem de ter o registo profissional do conselho de educação física
         if (!registro_profissional) {
             throw new Error('O registro profissional e obrigatorio para Personal Trainers.');
         }

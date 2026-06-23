@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Aluno - FitSync</title>
+    <title>Aluno - FitSync</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/dashboard_aluno.css">
     
@@ -18,20 +18,20 @@
             <div class="brand-box">
                 <div class="brand-text">
                     <strong>FitSync</strong>
-                    <span>Área do Aluno</span>
+                    <span>Área do aluno</span>
                 </div>
             </div>
 
             <div class="user-info">
-                <strong id="aluno-nome">Carregando Aluno...</strong>
+                <strong id="aluno-nome">Carregando aluno...</strong>
                 <span id="aluno-objetivo-sidebar">Objetivo: --</span>
             </div>
 
             <nav class="sidebar-nav">
-                <button class="sidebar-link active" onclick="showSection('meu-treino')">Meu Treino Ativo</button>
-                <button class="sidebar-link" onclick="showSection('historico')">Histórico de Treinos</button>
-                <button class="sidebar-link" onclick="showSection('evolucao')">Minha Evolução</button>
-                <button class="sidebar-link" onclick="showSection('perfil')">Meu Perfil</button>
+                <button class="sidebar-link active" onclick="showSection('meu-treino')">Meu treino ativo</button>
+                <button class="sidebar-link" onclick="showSection('historico')">Histórico de treinos</button>
+                <button class="sidebar-link" onclick="showSection('evolucao')">Minha evolução</button>
+                <button class="sidebar-link" onclick="showSection('perfil')">Meu perfil</button>
             </nav>
 
             <div class="sidebar-footer">
@@ -43,7 +43,7 @@
             
             <header class="dashboard-header">
                 <div>
-                    <p class="eyebrow">Área do Aluno</p>
+                    <p class="eyebrow">Área do aluno</p>
                     <h1 id="userGreeting">Bora treinar hoje?</h1>
                     <p class="subtitle">Acompanhe sua rotina de exercícios e evolução técnica em tempo real.</p>
                 </div>
@@ -54,23 +54,23 @@
                 <section id="meu-treino" class="content-section">
                     <div class="summary-row">
                         <div class="summary-card">
-                            <span>Frequência Semanal</span>
+                            <span>Frequência semanal</span>
                             <strong id="total-frequencia">0%</strong>
                         </div>
                         <div class="summary-card">
-                            <span>Último Peso</span>
+                            <span>Último peso</span>
                             <strong id="total-peso">0.0 kg</strong>
                         </div>
                         <div class="summary-card">
-                            <span>Meu IMC Atual</span>
+                            <span>Meu IMC atual</span>
                             <strong id="total-imc" style="color: #39FF14;">0.0</strong>
                         </div>
                     </div>
 
                     <div class="section-title-row">
-                        <h2>Minha Ficha de Treino Ativa</h2>
+                        <h2>Minha ficha de treino ativa</h2>
                 
-                        <button class="primary-button" onclick="abrirModalRegistrarTreino()">Check-in / Registrar Treino</button>
+                        <button class="primary-button" onclick="abrirModalRegistrarTreino()">Check-in / Registrar treino</button>
                     </div>
 
                     <div id="divisoes-treino-container" class="divisoes-container">
@@ -82,7 +82,7 @@
 
                 <section id="historico" class="content-section" style="display:none;">
                     <div class="section-title-row">
-                        <h2>Histórico de Execuções</h2>
+                        <h2>Histórico de execuções</h2>
                     </div>
 
                     <div class="table-container">
@@ -90,8 +90,8 @@
                             <thead>
                                 <tr>
                                     <th>Data / Hora</th>
-                                    <th>Ficha Executada</th>
-                                    <th>Observações do Treino</th>
+                                    <th>Ficha executada</th>
+                                    <th>Observações do treino</th>
                                 </tr>
                             </thead>
                             <tbody id="historico-container">
@@ -107,7 +107,7 @@
 
                 <section id="evolucao" class="content-section" style="display:none;">
                     <div class="section-title-row">
-                        <h2>Evolução Física e Composição Corporal</h2>
+                        <h2>Evolução física e composição corporal</h2>
                         <button class="primary-button" onclick="abrirModalAtualizarDados()">Atualizar Peso / Altura</button>
                     </div>
 
@@ -117,10 +117,10 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Data do Registro</th>
+                                    <th>Data do registro</th>
                                     <th>Peso (kg)</th>
                                     <th>Altura (m)</th>
-                                    <th>IMC Calculado</th>
+                                    <th>IMC calculado</th>
                                 </tr>
                             </thead>
                             <tbody id="evolucao-container">
@@ -141,17 +141,17 @@
 
                     <div class="card panel-form" style="max-width: 600px;">
                         <div class="form-group">
-                            <label class="form-label">Nome Completo</label>
+                            <label class="form-label">Nome completo</label>
                             <input type="text" class="form-input" id="perfil-nome" readonly>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Email de Acesso</label>
+                            <label class="form-label">Email de acesso</label>
                             <input type="email" class="form-input" id="perfil-email" readonly>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Data de Nascimento</label>
+                            <label class="form-label">Data de nascimento</label>
                             <input type="text" class="form-input" id="perfil-nascimento" readonly>
                         </div>
                     </div>
@@ -165,8 +165,8 @@
         <div class="modal-card">
             <div class="modal-header">
                 <div>
-                    <p class="eyebrow">Check-in Técnico</p>
-                    <h3>Registrar Treino Diário</h3>
+                    <p class="eyebrow">Check-in técnico</p>
+                    <h3>Registrar treino diário</h3>
                 </div>
                 <button class="close-modal" onclick="fecharModalRegistrarTreino()">×</button>
             </div>
@@ -195,26 +195,26 @@
         <div class="modal-card">
             <div class="modal-header">
                 <div>
-                    <p class="eyebrow">Indicadores Fisiológicos</p>
-                    <h3>Atualizar Dados Corporais</h3>
+                    <p class="eyebrow">Indicadores fisiológicos</p>
+                    <h3>Atualizar dados corporais</h3>
                 </div>
                 <button class="close-modal" onclick="fecharModalAtualizarDados()">×</button>
             </div>
 
             <form id="form-atualizar-dados" onsubmit="event.preventDefault(); salvarDadosCorporais();" class="modal-form">
                 <div class="form-group">
-                    <label for="corpo-peso">Peso Atual (kg)</label>
+                    <label for="corpo-peso">Peso atual (kg)</label>
                     <input id="corpo-peso" class="form-input" type="number" step="0.01" min="20" max="300" placeholder="Ex: 78.50" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="corpo-altura">Altura Atual (m)</label>
+                    <label for="corpo-altura">Altura atual (m)</label>
                     <input id="corpo-altura" class="form-input" type="number" step="0.01" min="1.00" max="2.50" placeholder="Ex: 1.75" required>
                 </div>
 
                 <div class="form-actions">
                     <button type="button" class="secondary-button" onclick="fecharModalAtualizarDados()">Cancelar</button>
-                    <button type="submit" class="primary-button">Salvar e Calcular</button>
+                    <button type="submit" class="primary-button">Salvar e calcular</button>
                 </div>
             </form>
         </div>

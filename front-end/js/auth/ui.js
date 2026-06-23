@@ -1,6 +1,3 @@
-/**
- * Manipulação visual e do DOM específicos da tela de Login.
- */
 class AuthUI {
     constructor() {
         this.messageElement = document.getElementById("message");
@@ -18,24 +15,23 @@ class AuthUI {
         this.loginButton.disabled = true;
     }
 
-    // Reativa o botão caso ocorra algum erro
     liberarBotao() {
         this.loginButton.disabled = false;
     }
 
-    // Renderiza mensagens de erro na tela de forma amigável
+    // mensagens de erro na tela
     exibirErro(texto) {
         this.messageElement.textContent = texto;
         this.messageElement.classList.add("error");
     }
 
-    // Renderiza mensagem de sucesso
+    // mensagem de sucesso
     exibirSucesso(texto) {
         this.messageElement.textContent = texto || "Login realizado com sucesso!";
         this.messageElement.classList.add("success");
     }
 
-    // Gerencia o redirecionamento baseado no cargo (Role) que voltou do back-end
+    // gerencia o redirecionamento baseado no cargo que voltou do back-end
     redirecionarUsuario(userType) {
         setTimeout(() => {
             if (userType === "PERSONAL") {

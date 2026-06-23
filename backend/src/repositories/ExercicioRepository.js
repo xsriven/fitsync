@@ -1,18 +1,17 @@
-// Importa a conexão padrão que tu já configuraste para o MySQL
 const connection = require('../config/database');
 
 class ExercicioRepository {
 
-    // Essa função vai buscar todos os exercícios cadastrados por ordem alfabética do nome
+    // busca todos os exercícios cadastrados por ordem alfabética
     async buscarTodos() {
-        // SQL puro. Apenas pede ao banco e devolve as linhas encontradas
+        
         const [rows] = await connection.execute(
             'SELECT id, nome, grupo_muscular, descricao, url_execucao FROM exercicios ORDER BY nome ASC'
         );
         return rows;
     }
 
-    // Essa função insere um novo exercício na tabela do banco de dados
+    // insere um novo exercício na tabela do banco de dados
     async criar({ nome, grupo_muscular, descricao, url_execucao }) {
         // Faz o insert passando os valores. Se forem nulos, o banco trata ou aceita como NULL
         const [resultado] = await connection.execute(
@@ -20,7 +19,7 @@ class ExercicioRepository {
             [nome, grupo_muscular, descricao, url_execucao]
         );
         
-        // Retorna o ID do exercício gerado automaticamente pelo banco
+        // retorna o ID do exercício gerado automaticamente pelo banco
         return resultado.insertId;
     }
 }

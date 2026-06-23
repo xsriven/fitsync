@@ -2,7 +2,7 @@ const AlunoService = require('../services/AlunoService');
 
 class AlunoController {
     
-    // Processa o cadastro transacional completo do aluno
+    // Processa o cadastro completo do aluno
     async cadastrar(req, res) {
         try {
             const personalId = req.usuario.id;
@@ -69,7 +69,7 @@ class AlunoController {
         }
     }
 
-    // Carrega o prontuário de anamnese e check-ins detalhados do aluno
+    // Carrega o prontuário de anamnese e check-ins do aluno
     async buscarPorId(req, res) {
         try {
             const alunoId = req.params.id;
@@ -79,7 +79,7 @@ class AlunoController {
             const prontuario = await AlunoService.buscarProntuarioPorId(alunoId, userRole, logadoId);
             return res.json(prontuario);
         } catch (error) {
-            // Trata as exceções de segurança e existência lançadas na camada Service
+            // Trata as exceções de segurança e existência da camada Service
             if (error.message.includes('nao encontrado')) {
                 return res.status(404).json({ erro: error.message });
             }

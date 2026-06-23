@@ -1,6 +1,3 @@
-/**
- * Orquestrador do fluxo de eventos da tela de cadastro de Personal Trainer.
- */
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("cadastroPersonalForm");
 
@@ -9,7 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
-        // Limpa mensagens e bloqueia o botão usando o seu gerenciador visual padrão
         authUI.limparMensagens();
         
         const cadastroButton = document.getElementById("cadastroButton");
@@ -25,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // Dispara a chamada para a API do seu back-end
             const resultado = await authApi.realizarCadastroPersonal(nome, email, password, registro_profissional);
 
-            // Se der bom, exibe a mensagem de sucesso na cor neon
+            // Se der certo, exibe a mensagem de sucesso
             authUI.exibirSucesso(resultado.mensagem || "Cadastro realizado com sucesso!");
 
             // Redireciona o novo profissional para a tela de login após 1.5 segundos
@@ -35,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         } catch (error) {
             console.error(error);
-            // Se o back-end apontar erro (como e-mail já existente), exibe na tela e destrava o botão
+            // Se o back-end apontar erro, exibe na tela e destrava o botão
             authUI.exibirErro(error.message || "Erro ao conectar com o servidor.");
             cadastroButton.disabled = false;
         }

@@ -1,5 +1,5 @@
 const Handlers = {
-    // Substitua essa função no seu handlers.js
+
 async carregarRotinaCompletaFicha() {
     try {
         const dadosPerfil = await ApiService.getDadosPerfil();
@@ -12,7 +12,6 @@ async carregarRotinaCompletaFicha() {
         if (respostaTreino.mensagem || !respostaTreino.divisoes) {
             UiService.renderFichaAtivaExercicios([], null);
         } else {
-            // Passamos as divisões E o id da ficha mãe para o renderizador
             UiService.renderFichaAtivaExercicios(respostaTreino.divisoes, respostaTreino.ficha.id);
         }
     } catch (error) {

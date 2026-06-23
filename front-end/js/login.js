@@ -1,5 +1,4 @@
-﻿// Lógica de autenticação: envia credenciais e armazena token JWT
-const form = document.getElementById("loginForm");
+﻿const form = document.getElementById("loginForm");
 const message = document.getElementById("message");
 const loginButton = document.getElementById("loginButton");
 
@@ -12,7 +11,7 @@ form.addEventListener("submit", async (event) => {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
   
-  // Tipo de usuário (ALUNO ou PERSONAL)
+  // Tipo de usuário
   const userType = form.querySelector('input[name="userType"]').value;
 
   if (!email || !password) {

@@ -1,9 +1,8 @@
-// Importa a conexão com o MySQL para rodar as queries puras
 const connection = require('../config/database');
 
 class TreinoRepository {
 
-    // Verifica se o aluno realmente pertence à carteira daquele personal trainer
+    // verifica se o aluno realmente pertence aquele personal trainer
     async verificarVinculoAluno(alunoId, personalId) {
         const [rows] = await connection.execute(
             'SELECT id_usuario FROM alunos WHERE id_usuario = ? AND personal_id = ?',
@@ -12,7 +11,7 @@ class TreinoRepository {
         return rows.length > 0;
     }
 
-    // Busca uma ficha de treino que esteja atualmente ativa para o aluno
+    // busca uma ficha de treino que esteja atualmente ativa para o aluno
     async buscarFichaAtiva(alunoId) {
         const [rows] = await connection.execute(
             `SELECT ft.id, ft.status, ft.data_criacao, u.nome as personal_nome
@@ -24,7 +23,7 @@ class TreinoRepository {
         return rows.length > 0 ? rows[0] : null;
     }
 
-    // Cria uma nova ficha de treino no banco de dados
+    // cria uma nova ficha de treino no banco de dados
     async criarFicha(alunoId, personalId) {
         const [resultado] = await connection.execute(
             'INSERT INTO fichas_treino (aluno_id, personal_id) VALUES (?, ?)',
@@ -33,7 +32,7 @@ class TreinoRepository {
         return resultado.insertId;
     }
 
-    // Cria a divisão do treino (Ex: "Treino A - Peito e Tríceps")
+    // cria a divisão do treino
     async criarDivisao(fichaId, identificador, ordem) {
         const [resultado] = await connection.execute(
             'INSERT INTO divisoes_treino (ficha_id, identificador, ordem) VALUES (?, ?, ?)',
@@ -42,7 +41,7 @@ class TreinoRepository {
         return resultado.insertId;
     }
 
-    // Vincula um exercício específico a uma divisão de treino informando séries e repetições
+    // vincula um exercício específico a uma divisão de treino informando séries e repetições
     async vincularExercicioADivisao(divisaoId, exercicioId, series, repeticoes) {
         await connection.execute(
             'INSERT INTO itens_ficha_treino (divisao_id, exercicio_id, series, repeticoes) VALUES (?, ?, ?, ?)',
@@ -50,7 +49,7 @@ class TreinoRepository {
         );
     }
 
-    // CORRIGIDO: Agora faz o JOIN correto trazendo o email e contando as divisões reais (num_divisoes)
+    // faz o JOIN trazendo o email e contando as divisões reais
     async listarFichasPorPersonal(personalId) {
         const [rows] = await connection.execute(
             `SELECT ft.id, u.nome as aluno_nome, u.email as aluno_email, 
@@ -66,7 +65,7 @@ class TreinoRepository {
         return rows;
     }
 
-    // Busca os dados básicos de uma ficha específica pelo ID dela
+    // busca os dados básicos de uma ficha específica pelo ID dela
     async buscarFichaPorId(fichaId) {
         const [rows] = await connection.execute(
             `SELECT ft.id, ft.status, ft.data_criacao, u.nome as aluno_nome, u.email as aluno_email, ft.personal_id
@@ -78,7 +77,7 @@ class TreinoRepository {
         return rows.length > 0 ? rows[0] : null;
     }
 
-    // Carrega todas as divisões associadas a uma ficha de treino específica
+    // carrega todas as divisões associadas a uma ficha de treino específica
     async buscarDivisoesDeUmaFicha(fichaId) {
         const [rows] = await connection.execute(
             'SELECT id, ficha_id, identificador, ordem FROM divisoes_treino WHERE ficha_id = ? ORDER BY ordem ASC',
@@ -87,7 +86,7 @@ class TreinoRepository {
         return rows;
     }
 
-    // Busca os exercícios detalhados que compõem uma determinada divisão
+    // busca os exercícios detalhados que compõem uma divisão
     async buscarExerciciosDaDivisao(divisaoId) {
         const [rows] = await connection.execute(
             `SELECT ift.id, e.nome, e.grupo_muscular, e.descricao, e.url_execucao, ift.series, ift.repeticoes
@@ -100,12 +99,12 @@ class TreinoRepository {
         return rows;
     }
 
-    // Remove (deleta) uma ficha do banco de dados pelo ID
+    // remove uma ficha do banco de dados pelo ID
     async deletarFicha(fichaId) {
         await connection.execute('DELETE FROM fichas_treino WHERE id = ?', [fichaId]);
     }
 
-    // Registra o check-in (execução) quando o aluno termina o treino do dia
+    // registra o check-in quando o aluno termina o treino do dia
     async registrarExecucaoTreino(alunoId, observacoes) {
         await connection.execute(
             'INSERT INTO execucoes_treino (aluno_id, observacoes) VALUES (?, ?)',
@@ -113,7 +112,7 @@ class TreinoRepository {
         );
     }
 
-    // Lista o histórico de treinos executados pelo aluno logado
+    // lista o histórico de treinos executados pelo aluno logado
     async listarExecucoesPorAluno(alunoId) {
         const [rows] = await connection.execute(
             'SELECT id, data_execucao, observacoes FROM execucoes_treino WHERE aluno_id = ? ORDER BY data_execucao DESC',
