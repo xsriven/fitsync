@@ -146,13 +146,15 @@
                     <div class="builder-exercises-section">
                         <h3 class="builder-subtitle">Exercícios adicionados</h3>
 
-                        <div id="exercicios-container" class="workout-grid-layout">
-                        </div>
+                        <div class="workout-box-container">
+                            <div id="exercicios-container" class="workout-table-layout">
+                                </div>
 
-                        <button class="btn-add-exercise-card" onclick="adicionarExercicio()">
-                            <span class="plus-icon">+</span>
-                            <span>Adicionar exercício à grade</span>
-                        </button>
+                            <button class="btn-add-exercise-row" onclick="adicionarExercicio()">
+                                <span class="plus-icon">+</span>
+                                <span>Adicionar novo exercício à ficha</span>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="form-actions-footer">
@@ -218,15 +220,15 @@
 
             <div class="step-indicator">
                 <span id="ind-step-1" class="step-dot active">Dados e avaliação</span>
-                <span id="ind-step-2" class="step-dot">anamnese</span>
+                <span id="ind-step-2" class="step-dot">Anamnese</span>
             </div>
 
             <form id="form-cadastro-aluno" onsubmit="event.preventDefault();" class="modal-form">
 
                 <div id="form-step-1" class="modal-step-content">
-                    <h4 style="color: #39FF14; margin: 0 0 10px 0; font-size: 0.9rem; text-transform: uppercase;">1. Credenciais e Perfil</h4>
+                    <h4 style="color: #39FF14; margin: 0 0 10px 0; font-size: 0.9rem; text-transform: uppercase;">1. Credenciais e perfil</h4>
                     <div class="form-group">
-                        <label for="aluno-nome">Nome Completo</label>
+                        <label for="aluno-nome">Nome completo</label>
                         <input id="aluno-nome" class="form-input" type="text" placeholder="Nome do aluno" required>
                     </div>
 
@@ -261,7 +263,7 @@
                             <input id="aluno-peso" class="form-input" type="number" step="0.01" min="20" max="300" placeholder="Ex: 75.0" required>
                         </div>
                         <div class="form-group">
-                            <label for="aluno-altura">Altura inicial (m)</label>
+                            <label for="aluno-altura">Altura (m)</label>
                             <input id="aluno-altura" class="form-input" type="number" step="0.01" min="1.00" max="2.50" placeholder="Ex: 1.75" required>
                         </div>
                     </div>

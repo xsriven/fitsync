@@ -1,4 +1,5 @@
 let listaExerciciosGlobal = [];
+let listaExerciciosBackup = [];
 let listaAlunosGlobal = [];
 
 const UiService = {
@@ -56,10 +57,9 @@ const UiService = {
             return;
         }
 
-
         container.innerHTML = fichas.map(ficha => `
             <tr>
-                <td><strong>${ficha.aluno_nome}</strong></td>
+                <td class="col-aluno"><strong>${ficha.aluno_nome}</strong></td>
                 <td>${ficha.aluno_email}</td>
                 <td style="text-align: center;"><span style="background: rgba(57,255,20,0.15); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; color: #39FF14;">${ficha.num_divisoes || 0} divisões</span></td>
                 <td style="text-align: center;"><span class="status-badge ${ficha.status === 'ATIVA' ? 'active' : 'inactive'}">${ficha.status}</span></td>
@@ -73,8 +73,14 @@ const UiService = {
         `).join('');
     },
     
-    renderExercicios(exercicios) {
+    renderExercicios(exercicios, primeiroCarregamento = false) {
         listaExerciciosGlobal = exercicios;
+        
+        // CORREÇÃO: Se for o primeiro carregamento ou se o backup estiver vazio, salva a lista mestre
+        if (primeiroCarregamento || listaExerciciosBackup.length === 0) {
+            listaExerciciosBackup = exercicios;
+        }
+
         const tableBody = document.getElementById('exercicios-table-body');
         if (!tableBody) return;
 
@@ -171,5 +177,46 @@ const UiService = {
                 </div>
             </div>
         `).join('');
+    },
+    
+    criarLinhaExercicioFicha(index) {
+        return `
+            <div class="exercicio-row-linear" id="exercicio-row-${index}">
+                <div class="form-group-cell">
+                    <label class="cell-label">Exercício</label>
+                    <div style="position: relative; width: 100%;">
+                        <input type="text" class="form-input search-exercicio" id="busca-exercicio-${index}" 
+                               placeholder="Buscar por nome ou grupo..." onkeyup="Handlers.filtrarExerciciosParaFicha(${index})" style="width: 100%;">
+                        
+                        <div class="exercicio-selecionado" id="exercicio-selecionado-${index}" style="display: none; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 10px 14px; border-radius: 10px; height: 47px;">
+                            <div style="display: flex; align-items: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                <strong id="nome-ex-badge-${index}" style="color: #fff; font-size: 0.95rem; margin-right: 8px;"></strong>
+                                <span id="grupo-ex-badge-${index}" class="badge-status"></span>
+                            </div>
+                            <button type="button" class="btn-action-table" onclick="Handlers.trocarExercicioFicha(${index})" style="margin: 0; font-size: 0.8rem;">Trocar</button>
+                        </div>
+
+                        <div class="dropdown-exercicios" id="dropdown-${index}" 
+                             style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: #0d0d0d; border: 1px solid rgba(57, 255, 20, 0.2); border-radius: 8px; max-height: 150px; overflow-y: auto; z-index: 10; margin-top: 2px;">
+                        </div>
+                        <input type="hidden" class="id-exercicio-input" id="id-exercicio-${index}" value="">
+                    </div>
+                </div>
+
+                <div class="form-group-cell">
+                    <label class="cell-label">Séries</label>
+                    <input type="number" class="form-input series-input" id="series-${index}" placeholder="3" min="1" value="3" style="width: 100%; height: 47px;" onchange="Handlers.atualizarObjetoExercicio(${index})">
+                </div>
+
+                <div class="form-group-cell">
+                    <label class="cell-label">Repetições</label>
+                    <input type="text" class="form-input repeticoes-input" id="repeticoes-${index}" placeholder="10" value="10" style="width: 100%; height: 47px;" onchange="Handlers.atualizarObjetoExercicio(${index})">
+                </div>
+
+                <button type="button" class="btn-remove-exercise" onclick="Handlers.removerExercicioFicha(${index})" title="Remover exercício">
+                    &times;
+                </button>
+            </div>
+        `;
     }
 };

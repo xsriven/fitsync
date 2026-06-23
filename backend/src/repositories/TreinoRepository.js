@@ -105,11 +105,10 @@ class TreinoRepository {
     }
 
     // registra o check-in quando o aluno termina o treino do dia
-    async registrarExecucaoTreino(alunoId, observacoes) {
-        await connection.execute(
-            'INSERT INTO execucoes_treino (aluno_id, observacoes) VALUES (?, ?)',
-            [alunoId, observacoes || null]
-        );
+    async registrarExecucaoTreino(alunoId, observacoes, fichaId) {
+        const sql = 'INSERT INTO execucoes_treino (aluno_id, observacoes, ficha_id) VALUES (?, ?, ?)';
+        const [resultado] = await connection.execute(sql, [alunoId, observacoes, fichaId]);
+        return resultado.insertId;
     }
 
     // lista o histórico de treinos executados pelo aluno logado

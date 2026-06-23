@@ -9,7 +9,7 @@ class ExercicioService {
     async cadastrarExercicio({ nome, grupo_muscular, descricao, url_execucao }) {
         
         if (!nome || !grupo_muscular) {
-            throw new Error('Nome e Grupo Muscular sao obrigatorios.');
+            throw new Error('Nome e grupo muscular sao obrigatorios.');
         }
 
         if (url_execucao) {

@@ -40,7 +40,7 @@ const Handlers = {
                     </div>
                     <div class="prontuario-grupo">
                         <h4>Condições Médicas</h4>
-                        <p>${data.condicoes_medicas || 'Nenhuma condição mapeada.'}</p>
+                        <p>${data.condicoes_medicas || 'Nenhuma condition mapeada.'}</p>
                     </div>
                     
                     <div class="divider"></div>
@@ -101,8 +101,9 @@ const Handlers = {
         if (dropdown) dropdown.style.display = 'none';
         
         if (badgeSelecionado) {
+            badgeSelecionado.style.display = 'block';
             badgeSelecionado.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; background: rgba(57,255,20,0.1); border: 1px solid rgba(57,255,20,0.3); padding: 10px 14px; border-radius: 10px; color: #39FF14; font-weight: 600;">
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; background: rgba(57,255,20,0.1); border: 1px solid rgba(57,255,20,0.3); padding: 10px 14px; border-radius: 10px; color: #39FF14; font-weight: 600; box-sizing: border-box;">
                     <span>Aluno: ${alunoNome}</span>
                     <button type="button" onclick="Handlers.removerAlunoDaFicha()" style="background: transparent; border: none; color: #ff5555; font-weight: 700; cursor: pointer; font-size: 0.9rem;">Remover</button>
                 </div>
@@ -118,15 +119,18 @@ const Handlers = {
         const badgeSelecionado = document.getElementById('aluno-ficha-selecionado');
         const hiddenInput = document.getElementById('aluno-id-ficha');
 
+        if (badgeSelecionado) {
+            badgeSelecionado.innerHTML = '';
+            badgeSelecionado.style.display = 'none';
+        }
+
         if (inputBusca) {
             inputBusca.value = '';
             inputBusca.style.display = 'block';
+            inputBusca.placeholder = "Digitar nome...";
             inputBusca.focus();
         }
         
-        if (badgeSelecionado) {
-            badgeSelecionado.innerHTML = '<div style="color: #666; font-size: 0.9rem; padding: 5px 0;">Nenhum aluno selecionado</div>';
-        }
         if (hiddenInput) hiddenInput.value = '';
     },
 
@@ -134,60 +138,20 @@ const Handlers = {
         const container = document.getElementById('exercicios-container');
         if (!container) return;
 
-        container.style.cssText = 'display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch;';
-
-        const itemIndex = exerciciosDoTreino.length;
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'exercicio-item-treino';
-        itemDiv.id = `exercicio-treino-${itemIndex}`;
+        const itemIndex = container.children.length;
+        const tempDiv = document.createElement('div');
         
-        itemDiv.style.cssText = 'position: relative; width: calc(33.333% - 14px); min-width: 280px; padding: 24px 16px 16px 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; box-sizing: border-box;';
-        
-        itemDiv.innerHTML = `
-            <button type="button" onclick="Handlers.removerExercicioFicha(${itemIndex})" style="position: absolute; top: 10px; right: 12px; background: transparent; border: none; color: #ff4d4d; font-size: 1.3rem; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#ff1a1a'" onmouseout="this.style.color='#ff4d4d'">×</button>
-            
-            <div style="display: flex; flex-direction: column; gap: 12px;">
-                
-                <div class="form-group" style="margin: 0; position: relative;">
-                    <label style="font-size: 0.8rem; color: #888; display: block; margin-bottom: 4px;">Buscar Exercício</label>
-                    <input type="text" class="form-input search-exercicio" style="background: #141414; font-size: 0.9rem; width: 100%; box-sizing: border-box;" placeholder="Buscar por nome ou grupo..." onkeyup="Handlers.filtrarExerciciosAutocomplete(${itemIndex})">
-                    <div class="dropdown-resultados" id="dropdown-${itemIndex}" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: #1a1a1a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; max-height: 150px; overflow-y: auto; z-index: 1000; margin-top: 2px;"></div>
-                </div>
-                
-                <div class="form-group" style="margin: 0;">
-                    <label style="font-size: 0.8rem; color: #888; display: block; margin-bottom: 4px;">Exercício Selecionado</label>
-                    <div style="display: flex; flex-direction: column; gap: 4px;">
-                        <div id="exercicio-nome-${itemIndex}" style="color: #bbb; font-size: 0.85rem;">
-                            Nenhum selecionado
-                        </div>
-                        <button type="button" class="secondary-button" onclick="Handlers.limparExercicioFicha(${itemIndex})" id="btn-trocar-${itemIndex}" style="padding: 4px 8px; font-size: 0.75rem; background: rgba(255,255,255,0.05); color: #aaa; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; cursor: pointer; display: none; width: 100%; text-align: center; box-sizing: border-box;">Trocar Exercício</button>
-                    </div>
-                    <input type="hidden" id="exercicio-id-${itemIndex}" value="">
-                </div>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <div class="form-group" style="margin: 0;">
-                        <label style="font-size: 0.8rem; color: #888; display: block; margin-bottom: 4px;">Séries</label>
-                        <input type="number" id="series-${itemIndex}" class="form-input" style="background: #141414; font-size: 0.9rem; width: 100%; box-sizing: border-box;" min="1" max="10" value="3" onchange="Handlers.atualizarObjetoExercicio(${itemIndex})" required>
-                    </div>
-                    <div class="form-group" style="margin: 0;">
-                        <label style="font-size: 0.8rem; color: #888; display: block; margin-bottom: 4px;">Repetições</label>
-                        <input type="number" id="repeticoes-${itemIndex}" class="form-input" style="background: #141414; font-size: 0.9rem; width: 100%; box-sizing: border-box;" min="1" max="50" value="10" onchange="Handlers.atualizarObjetoExercicio(${itemIndex})" required>
-                    </div>
-                </div>
-
-            </div>
-        `;
-        
-        container.appendChild(itemDiv);
+        tempDiv.innerHTML = UiService.criarLinhaExercicioFicha(itemIndex);
+        container.appendChild(tempDiv.firstElementChild);
         exerciciosDoTreino.push({ id: null, series: 3, repeticoes: 10 });
     },
 
-    filtrarExerciciosAutocomplete(index) {
-        const inputBusca = document.querySelector(`#exercicio-treino-${index} .search-exercicio`).value.toLowerCase();
+    filtrarExerciciosParaFicha(index) {
+        const inputBusca = document.getElementById(`busca-exercicio-${index}`).value.toLowerCase();
+        const dropdown = document.getElementById(`dropdown-${index}`);
         
         if (inputBusca.length === 0) {
-            document.getElementById(`dropdown-${index}`).style.display = 'none';
+            if (dropdown) dropdown.style.display = 'none';
             return;
         }
         
@@ -200,69 +164,47 @@ const Handlers = {
     },
 
     selecionarExercicioFicha(index, exercicioId, nome, grupo) {
-        const inputBusca = document.querySelector(`#exercicio-treino-${index} .search-exercicio`);
-        const labelBusca = inputBusca?.previousElementSibling;
+        const inputBusca = document.getElementById(`busca-exercicio-${index}`);
         const dropdown = document.getElementById(`dropdown-${index}`);
-        const nomeElement = document.getElementById(`exercicio-nome-${index}`);
-        const btnTrocar = document.getElementById(`btn-trocar-${index}`);
-        const inputHidden = document.getElementById(`exercicio-id-${index}`);
+        const badgeSelecionado = document.getElementById(`exercicio-selecionado-${index}`);
+        const nomeBadge = document.getElementById(`nome-ex-badge-${index}`);
+        const grupoBadge = document.getElementById(`grupo-ex-badge-${index}`);
+        const inputHidden = document.getElementById(`id-exercicio-${index}`);
         
         if (inputBusca) inputBusca.style.display = 'none';
-        if (labelBusca) labelBusca.style.display = 'none';
         if (dropdown) dropdown.style.display = 'none';
         
-        if (nomeElement) {
-            nomeElement.innerHTML = `
-                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; box-sizing: border-box;">
-                    <div style="font-weight: 700; color: #fff; font-size: 0.95rem; margin-bottom: 4px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">${nome}</div>
-                    <span style="font-size: 0.7rem; color: #39FF14; background: rgba(57,255,20,0.1); padding: 2px 6px; border-radius: 4px; font-weight: 600;">${grupo}</span>
-                </div>
-            `;
-        }
-        
-        if (btnTrocar) {
-            btnTrocar.textContent = 'Trocar Exercício';
-            btnTrocar.style.cssText = 'padding: 6px 12px; font-size: 0.75rem; background: rgba(255,255,255,0.04); color: #aaa; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; cursor: pointer; display: block; width: 100%; text-align: center; margin-top: 6px; transition: background 0.2s;';
-            btnTrocar.onmouseover = function() { this.style.background = 'rgba(255,255,255,0.08)'; };
-            btnTrocar.onmouseout = function() { this.style.background = 'rgba(255,255,255,0.04)'; };
-        }
-        
+        if (nomeBadge) nomeBadge.textContent = nome;
+        if (grupoBadge) grupoBadge.textContent = grupo;
+        if (badgeSelecionado) badgeSelecionado.style.display = 'flex';
         if (inputHidden) inputHidden.value = exercicioId;
         
         Handlers.atualizarObjetoExercicio(index);
     },
 
-    limparExercicioFicha(index) {
-        const inputBusca = document.querySelector(`#exercicio-treino-${index} .search-exercicio`);
-        const labelBusca = inputBusca?.previousElementSibling;
-        const nomeElement = document.getElementById(`exercicio-nome-${index}`);
-        const btnTrocar = document.getElementById(`btn-trocar-${index}`);
-        const inputHidden = document.getElementById(`exercicio-id-${index}`);
+    trocarExercicioFicha(index) {
+        const inputBusca = document.getElementById(`busca-exercicio-${index}`);
+        const badgeSelecionado = document.getElementById(`exercicio-selecionado-${index}`);
+        const inputHidden = document.getElementById(`id-exercicio-${index}`);
         
         if (inputBusca) {
             inputBusca.value = '';
             inputBusca.style.display = 'block';
             inputBusca.focus();
         }
-        if (labelBusca) labelBusca.style.display = 'block';
-        
-        if (nomeElement) {
-            nomeElement.textContent = 'Nenhum selecionado';
-            nomeElement.style.color = '#bbb';
-        }
-        
-        if (btnTrocar) btnTrocar.style.display = 'none';
+        if (badgeSelecionado) badgeSelecionado.style.display = 'none';
         if (inputHidden) inputHidden.value = '';
         
         Handlers.atualizarObjetoExercicio(index);
     },
 
     atualizarObjetoExercicio(index) {
-        const exercicioId = document.getElementById(`exercicio-id-${index}`).value;
+        const inputHidden = document.getElementById(`id-exercicio-${index}`);
+        const exercicioId = inputHidden ? inputHidden.value : null;
         const seriesInput = document.getElementById(`series-${index}`);
         const repeticoesInput = document.getElementById(`repeticoes-${index}`);
         
-        if (seriesInput && repeticoesInput) {
+        if (seriesInput && repeticoesInput && exerciciosDoTreino[index]) {
             exerciciosDoTreino[index] = {
                 id: exercicioId ? parseInt(exercicioId) : null,
                 series: parseInt(seriesInput.value) || 3,
@@ -272,13 +214,58 @@ const Handlers = {
     },
 
     removerExercicioFicha(index) {
-        document.getElementById(`exercicio-treino-${index}`)?.remove();
-        exerciciosDoTreino.splice(index, 1);
+        document.getElementById(`exercicio-row-${index}`)?.remove();
+        
+        const container = document.getElementById('exercicios-container');
+        if (!container) return;
+        
+        const rows = container.children;
+        Array.from(rows).forEach((row, newIndex) => {
+            row.id = `exercicio-row-${newIndex}`;
+            
+            const busca = row.querySelector('.search-exercicio');
+            if (busca) {
+                busca.id = `busca-exercicio-${newIndex}`;
+                busca.setAttribute('onkeyup', `Handlers.filtrarExerciciosParaFicha(${newIndex})`);
+            }
+            
+            const dropdown = row.querySelector('.dropdown-exercicios');
+            if (dropdown) dropdown.id = `dropdown-${newIndex}`;
+            
+            const hidden = row.querySelector('.id-exercicio-input');
+            if (hidden) hidden.id = `id-exercicio-${newIndex}`;
+            
+            const selectedBox = row.querySelector('.exercicio-selecionado');
+            if (selectedBox) {
+                selectedBox.id = `exercicio-selecionado-${newIndex}`;
+                const btnTrocar = selectedBox.querySelector('button');
+                if (btnTrocar) btnTrocar.setAttribute('onclick', `Handlers.trocarExercicioFicha(${newIndex})`);
+            }
+            
+            const nomeBadge = row.querySelector(`[id^="nome-ex-badge-"]`);
+            if (nomeBadge) nomeBadge.id = `nome-ex-badge-${newIndex}`;
+            
+            const grupoBadge = row.querySelector(`[id^="grupo-ex-badge-"]`);
+            if (grupoBadge) grupoBadge.id = `grupo-ex-badge-${newIndex}`;
+            
+            const series = row.querySelector('.series-input');
+            if (series) {
+                series.id = `series-${newIndex}`;
+                series.setAttribute('onchange', `Handlers.atualizarObjetoExercicio(${newIndex})`);
+            }
+            
+            const reps = row.querySelector('.repeticoes-input');
+            if (reps) {
+                reps.id = `repeticoes-${newIndex}`;
+                reps.setAttribute('onchange', `Handlers.atualizarObjetoExercicio(${newIndex})`);
+            }
+        });
     },
 
     carregarFichaParaCriacao(alunoId, alunoNome) {
         Handlers.selecionarAlunoParaFicha(alunoId, alunoNome);
-        document.getElementById('exercicios-container').innerHTML = '';
+        const container = document.getElementById('exercicios-container');
+        if (container) container.innerHTML = '';
         exerciciosDoTreino = [];
         Handlers.adicionarLinhaExercicio();
         UiService.showSection('criar-treino');
@@ -294,16 +281,29 @@ const Handlers = {
             return;
         }
 
+        const container = document.getElementById('exercicios-container');
+        const rows = container ? container.children : [];
+        
+        exerciciosDoTreino = Array.from(rows).map((row) => {
+            const currentIdx = row.id.split('-').pop();
+            
+            const idVal = document.getElementById(`id-exercicio-${currentIdx}`)?.value;
+            const seriesVal = document.getElementById(`series-${currentIdx}`)?.value;
+            const repsVal = document.getElementById(`repeticoes-${currentIdx}`)?.value;
+            
+            return {
+                exercicio_id: idVal ? parseInt(idVal) : null,
+                series: parseInt(seriesVal) || 3,
+                repeticoes: repsVal ? repsVal.toString() : "10"
+            };
+        });
+
         if (exerciciosDoTreino.length === 0) {
             alert('Adicione ao menos um exercício.');
             return;
         }
 
-        if (exerciciosDoTreino.some(ex => !ex.id)) {
-            exerciciosDoTreino.forEach((ex, index) => {
-                const nomeElement = document.getElementById(`exercicio-nome-${index}`);
-                if (nomeElement && !ex.id) nomeElement.style.color = '#ff6b6b';
-            });
+        if (exerciciosDoTreino.some(ex => !ex.exercicio_id)) {
             alert('Todos os exercícios adicionados devem ter uma seleção válida.');
             return;
         }
@@ -318,11 +318,10 @@ const Handlers = {
 
             alert('Divisão de treino gravada com sucesso.');
             
-            document.getElementById('busca-aluno-ficha').value = '';
-            document.getElementById('aluno-ficha-selecionado').textContent = 'Nenhum aluno selecionado';
-            document.getElementById('aluno-id-ficha').value = '';
+            Handlers.removerAlunoDaFicha();
             document.getElementById('divisao-identificador').value = '';
-            document.getElementById('exercicios-container').innerHTML = '';
+            if (container) container.innerHTML = '';
+            
             exerciciosDoTreino = [];
             alunoSelecionadoFicha = null;
 
@@ -365,7 +364,6 @@ const Handlers = {
 
     async deletarTreinoCompleto(fichaId, alunoNome) {
         const confirmar = confirm(`Tem certeza que deseja remover toda a ficha de treino e rotinas de ${alunoNome}?`);
-        
         if (!confirmar) return;
 
         try {
@@ -422,15 +420,24 @@ const Handlers = {
             alert(error.message || 'Falha ao processar cadastro completo.');
         }
     },
-
+    
     filtrarExercicios() {
         const filtro = document.getElementById('filtro-grupo-muscular').value;
+        
         if (!filtro) {
-            UiService.renderExercicios(listaExerciciosGlobal);
+            UiService.renderExercicios(listaExerciciosBackup, false);
             return;
         }
-        const filtrados = listaExerciciosGlobal.filter(ex => ex.grupo_muscular === filtro);
-        UiService.renderExercicios(filtrados);
+    
+        const normalizar = (texto) => 
+            texto ? texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : "";
+
+        const filtroNormalizado = normalizar(filtro);
+
+        const filtrados = listaExerciciosBackup.filter(ex => 
+            normalizar(ex.grupo_muscular) === filtroNormalizado
+        );
+        UiService.renderExercicios(filtrados, false);
     },
 
     filtrarAlunosInput() {
@@ -464,6 +471,9 @@ const Handlers = {
         }
     }
 };
+
+window.adicionarExercicio = Handlers.adicionarLinhaExercicio;
+window.salvarDivisaoTreino = Handlers.submeterDivisaoTreino;
 
 window.Handlers = Handlers;
 window.showSection = UiService.showSection;

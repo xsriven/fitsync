@@ -98,8 +98,8 @@ class TreinoService {
         return { ficha, divisoes };
     }
 
-    async salvarExecucao(alunoId, observacoes) {
-        await TreinoRepository.registrarExecucaoTreino(alunoId, observacoes);
+    async salvarExecucao(alunoId, observacoes, fichaId) {
+        await TreinoRepository.registrarExecucaoTreino(alunoId, observacoes, fichaId);
         return true;
     }
 

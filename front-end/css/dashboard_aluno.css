@@ -1,4 +1,3 @@
-/* CONFIGURAÇÃO BASE DE TELA CHEIA */
 body, html {
     margin: 0;
     padding: 0;
@@ -10,7 +9,6 @@ body, html {
     color: #fff;
 }
 
-/* BACKGROUNDS TECH LUXURY */
 .bg-fundo {
     position: fixed;
     top: 0;
@@ -34,7 +32,6 @@ body, html {
     z-index: -1;
 }
 
-/* LAYOUT GRID PRINCIPAL DO PAINEL */
 .dashboard-container {
     display: grid;
     grid-template-columns: 280px 1fr;
@@ -43,7 +40,6 @@ body, html {
     box-sizing: border-box;
 }
 
-/* SIDEBAR FIXA E ESTILIZADA */
 .sidebar {
     background: rgba(10, 10, 10, 0.95);
     border-right: 1px solid rgba(57, 255, 20, 0.1);
@@ -84,7 +80,6 @@ body, html {
     font-weight: 700;
 }
 
-/* BOX DO USUÁRIO */
 .user-info {
     display: flex;
     flex-direction: column;
@@ -105,7 +100,6 @@ body, html {
     font-size: 0.8rem;
 }
 
-/* NAVEGAÇÃO DA SIDEBAR */
 .sidebar-nav {
     display: flex;
     flex-direction: column;
@@ -147,7 +141,6 @@ body, html {
     border-color: rgba(255, 85, 85, 0.2);
 }
 
-/* MAIN CONTENT */
 .dashboard-main {
     padding: 40px;
     overflow-y: auto;
@@ -158,7 +151,6 @@ body, html {
     gap: 32px;
 }
 
-/* HEADER INTERNO */
 .dashboard-header {
     display: flex;
     justify-content: space-between;
@@ -190,7 +182,6 @@ body, html {
     font-size: 0.95rem;
 }
 
-/* CARDS DE MÉTRICAS / SUMÁRIO */
 .summary-row {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -220,7 +211,6 @@ body, html {
     color: #fff;
 }
 
-/* ELEMENTOS DE CONTEÚDO */
 .section-title-row {
     display: flex;
     justify-content: space-between;
@@ -234,7 +224,6 @@ body, html {
     font-weight: 600;
 }
 
-/* BOTÕES PREMIUM */
 .primary-button {
     background: #39FF14;
     color: #000;
@@ -270,7 +259,6 @@ body, html {
     border-color: rgba(255, 255, 255, 0.2);
 }
 
-/* CARD DE EXIBIÇÃO BASE */
 .card {
     background: rgba(20, 20, 20, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.06);
@@ -285,7 +273,6 @@ body, html {
     gap: 24px;
 }
 
-/* GRID DOS EXERCÍCIOS INTERNOS DA FICHA DO ALUNO */
 .exercicios-grid-aluno {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -432,7 +419,6 @@ tbody tr:hover {
     background: rgba(57, 255, 20, 0.02);
 }
 
-/* MODAIS ABSOLUTOS */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -504,7 +490,6 @@ tbody tr:hover {
     margin-top: 12px;
 }
 
-/* RESPONSIVIDADE ADAPTATIVA */
 @media (max-width: 900px) {
     .dashboard-container {
         grid-template-columns: 1fr;
@@ -516,4 +501,55 @@ tbody tr:hover {
 
 .no-print {
     display: none !important;
+}
+
+.modo-impressao-pdf {
+    background: #ffffff !important;
+    color: #000000 !important;
+    padding: 20px !important;
+    box-shadow: none !important;
+}
+
+.modo-impressao-pdf h2 {
+    color: #000000 !important;
+    font-size: 1.6rem !important;
+    border-bottom: 2px solid #000000 !important;
+    padding-bottom: 8px !important;
+    margin-bottom: 20px !important;
+}
+
+.modo-impressao-pdf .exercicio-bloco-pdf {
+    background: #ffffff !important;
+    border: 1px solid #dddddd !important;
+    padding: 16px !important;
+    border-radius: 8px !important;
+    color: #000000 !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    page-break-inside: avoid;
+}
+
+.modo-impressao-pdf strong {
+    color: #000000 !important;
+    font-size: 1.1rem !important;
+}
+
+.modo-impressao-pdf p {
+    color: #444444 !important;
+    font-size: 0.85rem !important;
+}
+
+.modo-impressao-pdf .badge-carga-pdf {
+    background: #f0f0f0 !important;
+    color: #000000 !important;
+    border: 1px solid #cccccc !important;
+    font-weight: 700 !important;
+    padding: 6px 12px !important;
+    border-radius: 6px !important;
+}
+
+.modo-impressao-pdf span[style*="background: rgba(57,255,20"] {
+    background: #e0e0e0 !important;
+    color: #000000 !important;
 }

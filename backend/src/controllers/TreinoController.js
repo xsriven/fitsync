@@ -92,9 +92,8 @@ class TreinoController {
     async registrarExecucao(req, res) {
         try {
             const alunoId = req.usuario.id;
-            const { observacoes } = req.body;
-
-            await TreinoService.salvarExecucao(alunoId, observacoes);
+            const { ficha_id, observacoes } = req.body;
+            await TreinoService.salvarExecucao(alunoId, observacoes, ficha_id);
             return res.status(201).json({ mensagem: 'Execucao de treino salva (Check-in confirmado)!' });
         } catch (error) {
             console.error(error);

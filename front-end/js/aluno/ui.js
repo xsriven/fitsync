@@ -77,8 +77,8 @@ const UiService = {
             </div>
 
             <div id="print-area-divisao-${div.id}">
-                <div style="background: rgba(20, 20, 20, 0.8); border: 1px solid rgba(57, 255, 20, 0.15); border-radius: 16px; padding: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.5);">
-                    <h2 style="color: #39FF14; margin: 0 0 24px 0; font-size: 1.4rem; font-weight: 700;">Rotina de Foco: ${div.identificador}</h2>
+                <div class="container-treino-principal" style="background: rgba(20, 20, 20, 0.8); border: 1px solid rgba(57, 255, 20, 0.15); border-radius: 16px; padding: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.5);">
+                    <h2 style="color: #39FF14; margin: 0 0 24px 0; font-size: 1.4rem; font-weight: 700;">Divisão de treino: ${div.identificador}</h2>
                     
                     <div style="display: flex; flex-direction: column; gap: 20px;">
                         ${div.exercicios && div.exercicios.length > 0 ? div.exercicios.map(ex => {
@@ -97,7 +97,7 @@ const UiService = {
                             }
 
                             return `
-                                <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.04); padding: 24px; border-radius: 14px; gap: 24px;">
+                                <div class="exercicio-bloco-pdf" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.04); padding: 24px; border-radius: 14px; gap: 24px;">
                                     <div id="text-box-${ex.id}" style="flex: 1; min-width: 280px; display: flex; flex-direction: column; justify-content: center; gap: 12px;">
                                         <div>
                                             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
@@ -107,7 +107,7 @@ const UiService = {
                                             <p style="color: #888; font-size: 0.9rem; margin: 0; line-height: 1.5; max-width: 650px;">${ex.descricao || 'Sem recomendacoes tecnicas complementares cadastradas.'}</p>
                                         </div>
                                         <div>
-                                            <span style="font-weight: 700; color: #39FF14; font-size: 1.05rem; background: rgba(57, 255, 20, 0.05); border: 1px solid rgba(57, 255, 20, 0.15); display: inline-block; padding: 6px 16px; border-radius: 8px; letter-spacing: 0.5px;">
+                                            <span class="badge-carga-pdf" style="font-weight: 700; color: #39FF14; font-size: 1.05rem; background: rgba(57, 255, 20, 0.05); border: 1px solid rgba(57, 255, 20, 0.15); display: inline-block; padding: 6px 16px; border-radius: 8px; letter-spacing: 0.5px;">
                                                 ${ex.series} × ${ex.repeticoes} Repeticoes
                                             </span>
                                         </div>

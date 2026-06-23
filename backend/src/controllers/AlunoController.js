@@ -11,7 +11,7 @@ class AlunoController {
             await AlunoService.cadastrarAluno(personalId, req.body);
 
             return res.status(201).json({
-                mensagem: 'Aluno, Avaliacao Corporal e Ficha de Anamnese cadastrados com sucesso!'
+                mensagem: 'Aluno, avaliacao corporal e ficha de anamnese cadastrados com sucesso!'
             });
         } catch (error) {
             // Captura erros de validações e regras de negócio lançadas pelo Service
