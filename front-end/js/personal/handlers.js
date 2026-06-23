@@ -43,7 +43,6 @@ const Handlers = {
                         <p>${data.condicoes_medicas || 'Nenhuma condição mapeada.'}</p>
                     </div>
                     
-                    
                     <div class="divider"></div>
                     <div class="prontuario-grupo">
                         <h4 style="color: #39FF14; margin-bottom: 10px;">Últimos Check-ins(Frequência)</h4>
@@ -135,38 +134,48 @@ const Handlers = {
         const container = document.getElementById('exercicios-container');
         if (!container) return;
 
+        container.style.cssText = 'display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch;';
+
         const itemIndex = exerciciosDoTreino.length;
         const itemDiv = document.createElement('div');
         itemDiv.className = 'exercicio-item-treino';
         itemDiv.id = `exercicio-treino-${itemIndex}`;
-        itemDiv.style.cssText = 'margin-bottom: 15px; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px;';
+        
+        itemDiv.style.cssText = 'position: relative; width: calc(33.333% - 14px); min-width: 280px; padding: 24px 16px 16px 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; box-sizing: border-box;';
         
         itemDiv.innerHTML = `
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px; align-items: start;">
-                <div class="form-group" style="margin: 0; grid-column: 1 / -1; position: relative;">
-                    <label style="font-size: 0.8rem; color: #888;">Buscar Exercício</label>
-                    <input type="text" class="form-input search-exercicio" style="background: #141414; font-size: 0.9rem;" placeholder="Buscar por nome ou grupo..." onkeyup="Handlers.filtrarExerciciosAutocomplete(${itemIndex})">
-                    <div class="dropdown-resultados" id="dropdown-${itemIndex}" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: #1a1a1a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; max-height: 200px; overflow-y: auto; z-index: 1000; margin-top: 2px;"></div>
+            <button type="button" onclick="Handlers.removerExercicioFicha(${itemIndex})" style="position: absolute; top: 10px; right: 12px; background: transparent; border: none; color: #ff4d4d; font-size: 1.3rem; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#ff1a1a'" onmouseout="this.style.color='#ff4d4d'">×</button>
+            
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                
+                <div class="form-group" style="margin: 0; position: relative;">
+                    <label style="font-size: 0.8rem; color: #888; display: block; margin-bottom: 4px;">Buscar Exercício</label>
+                    <input type="text" class="form-input search-exercicio" style="background: #141414; font-size: 0.9rem; width: 100%; box-sizing: border-box;" placeholder="Buscar por nome ou grupo..." onkeyup="Handlers.filtrarExerciciosAutocomplete(${itemIndex})">
+                    <div class="dropdown-resultados" id="dropdown-${itemIndex}" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: #1a1a1a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; max-height: 150px; overflow-y: auto; z-index: 1000; margin-top: 2px;"></div>
                 </div>
-                <div class="form-group" style="margin: 0; grid-column: 1 / 3;">
-                    <label style="font-size: 0.8rem; color: #888;">Exercício Selecionado</label>
-                    <div style="display: flex; gap: 8px; align-items: center;">
-                        <div style="padding: 8px 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; flex: 1; color: #bbb; font-size: 0.85rem;">
-                            <span id="exercicio-nome-${itemIndex}">Nenhum selecionado</span>
+                
+                <div class="form-group" style="margin: 0;">
+                    <label style="font-size: 0.8rem; color: #888; display: block; margin-bottom: 4px;">Exercício Selecionado</label>
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <div id="exercicio-nome-${itemIndex}" style="color: #bbb; font-size: 0.85rem;">
+                            Nenhum selecionado
                         </div>
-                        <button type="button" class="secondary-button" onclick="Handlers.limparExercicioFicha(${itemIndex})" id="btn-trocar-${itemIndex}" style="padding: 8px 12px; font-size: 0.8rem; background: rgba(57,255,20,0.15); color: #39FF14; border: 1px solid rgba(57,255,20,0.3); border-radius: 6px; cursor: pointer; display: none;">Trocar</button>
+                        <button type="button" class="secondary-button" onclick="Handlers.limparExercicioFicha(${itemIndex})" id="btn-trocar-${itemIndex}" style="padding: 4px 8px; font-size: 0.75rem; background: rgba(255,255,255,0.05); color: #aaa; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; cursor: pointer; display: none; width: 100%; text-align: center; box-sizing: border-box;">Trocar Exercício</button>
                     </div>
                     <input type="hidden" id="exercicio-id-${itemIndex}" value="">
                 </div>
-                <div class="form-group" style="margin: 0;">
-                    <label style="font-size: 0.8rem; color: #888;">Séries</label>
-                    <input type="number" id="series-${itemIndex}" class="form-input" style="background: #141414; font-size: 0.9rem;" min="1" max="10" value="3" onchange="Handlers.atualizarObjetoExercicio(${itemIndex})" required>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="form-group" style="margin: 0;">
+                        <label style="font-size: 0.8rem; color: #888; display: block; margin-bottom: 4px;">Séries</label>
+                        <input type="number" id="series-${itemIndex}" class="form-input" style="background: #141414; font-size: 0.9rem; width: 100%; box-sizing: border-box;" min="1" max="10" value="3" onchange="Handlers.atualizarObjetoExercicio(${itemIndex})" required>
+                    </div>
+                    <div class="form-group" style="margin: 0;">
+                        <label style="font-size: 0.8rem; color: #888; display: block; margin-bottom: 4px;">Repetições</label>
+                        <input type="number" id="repeticoes-${itemIndex}" class="form-input" style="background: #141414; font-size: 0.9rem; width: 100%; box-sizing: border-box;" min="1" max="50" value="10" onchange="Handlers.atualizarObjetoExercicio(${itemIndex})" required>
+                    </div>
                 </div>
-                <div class="form-group" style="margin: 0;">
-                    <label style="font-size: 0.8rem; color: #888;">Repetições</label>
-                    <input type="number" id="repeticoes-${itemIndex}" class="form-input" style="background: #141414; font-size: 0.9rem;" min="1" max="50" value="10" onchange="Handlers.atualizarObjetoExercicio(${itemIndex})" required>
-                </div>
-                <button type="button" class="secondary-button" onclick="Handlers.removerExercicioFicha(${itemIndex})" style="padding: 8px 12px; font-size: 0.85rem; margin-top: 22px;">Remover</button>
+
             </div>
         `;
         
@@ -192,31 +201,30 @@ const Handlers = {
 
     selecionarExercicioFicha(index, exercicioId, nome, grupo) {
         const inputBusca = document.querySelector(`#exercicio-treino-${index} .search-exercicio`);
-        const labelBusca = inputBusca?.previousElementSibling; // Pega o label "Buscar Exercício"
+        const labelBusca = inputBusca?.previousElementSibling;
         const dropdown = document.getElementById(`dropdown-${index}`);
         const nomeElement = document.getElementById(`exercicio-nome-${index}`);
         const btnTrocar = document.getElementById(`btn-trocar-${index}`);
         const inputHidden = document.getElementById(`exercicio-id-${index}`);
         
-        if (inputBusca) {
-            inputBusca.value = '';
-            inputBusca.style.display = 'none';
-        }
+        if (inputBusca) inputBusca.style.display = 'none';
         if (labelBusca) labelBusca.style.display = 'none';
         if (dropdown) dropdown.style.display = 'none';
         
         if (nomeElement) {
             nomeElement.innerHTML = `
-                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 8px;">
-                    <div style="font-weight: 700; color: #fff; font-size: 1rem; margin-bottom: 4px;">${nome}</div>
-                    <span style="font-size: 0.75rem; color: #39FF14; background: rgba(57,255,20,0.1); padding: 2px 6px; border-radius: 4px;">${grupo}</span>
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; box-sizing: border-box;">
+                    <div style="font-weight: 700; color: #fff; font-size: 0.95rem; margin-bottom: 4px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">${nome}</div>
+                    <span style="font-size: 0.7rem; color: #39FF14; background: rgba(57,255,20,0.1); padding: 2px 6px; border-radius: 4px; font-weight: 600;">${grupo}</span>
                 </div>
             `;
         }
         
         if (btnTrocar) {
-            btnTrocar.textContent = 'Remover Escolha';
-            btnTrocar.style.cssText = 'padding: 8px 12px; font-size: 0.8rem; background: rgba(255,85,85,0.1); color: #ff5555; border: 1px solid rgba(255,85,85,0.2); border-radius: 6px; cursor: pointer; display: inline-block; width: 100%; text-align: center; margin-top: 5px;';
+            btnTrocar.textContent = 'Trocar Exercício';
+            btnTrocar.style.cssText = 'padding: 6px 12px; font-size: 0.75rem; background: rgba(255,255,255,0.04); color: #aaa; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; cursor: pointer; display: block; width: 100%; text-align: center; margin-top: 6px; transition: background 0.2s;';
+            btnTrocar.onmouseover = function() { this.style.background = 'rgba(255,255,255,0.08)'; };
+            btnTrocar.onmouseout = function() { this.style.background = 'rgba(255,255,255,0.04)'; };
         }
         
         if (inputHidden) inputHidden.value = exercicioId;
@@ -318,8 +326,8 @@ const Handlers = {
             exerciciosDoTreino = [];
             alunoSelecionadoFicha = null;
 
-            const atualizaFichas = await ApiService.getFichasTreino();
-            UiService.renderFichas(atualizaFichas);
+            const updateFichas = await ApiService.getFichasTreino();
+            UiService.renderFichas(updateFichas);
             UiService.showSection('treinos');
 
         } catch (error) {
@@ -362,15 +370,16 @@ const Handlers = {
 
         try {
             const resultado = await ApiService.excluirFichaTreino(fichaId);
-            alert(resultado.mensagem || 'Treino removido do painel.');
+            alert(resultado.mensagem || 'Treino removido do panel.');
             
-            const atualizaFichas = await ApiService.getFichasTreino();
-            UiService.renderFichas(atualizaFichas);
+            const updateFichas = await ApiService.getFichasTreino();
+            UiService.renderFichas(updateFichas);
         } catch (error) {
             alert(error.message);
         }
     },
-async cadastrarAluno() {
+
+    async cadastrarAluno() {
         const nome = document.getElementById('aluno-nome').value.trim();
         const email = document.getElementById('aluno-email').value.trim();
         const objetivo = document.getElementById('aluno-objetivo').value.trim();
@@ -413,6 +422,7 @@ async cadastrarAluno() {
             alert(error.message || 'Falha ao processar cadastro completo.');
         }
     },
+
     filtrarExercicios() {
         const filtro = document.getElementById('filtro-grupo-muscular').value;
         if (!filtro) {
@@ -427,6 +437,31 @@ async cadastrarAluno() {
         const texto = document.getElementById('searchBox').value.toLowerCase();
         const filtrados = listaAlunosGlobal.filter(al => al.nome.toLowerCase().includes(texto));
         UiService.renderAlunos(filtrados);
+    },
+
+    async submeterNovoExercicio() {
+        const nome = document.getElementById('exercicio-nome').value.trim();
+        const grupo_muscular = document.getElementById('exercicio-grupo').value;
+        const descricao = document.getElementById('exercicio-desc').value.trim();
+        const url_execucao = document.getElementById('exercicio-url').value.trim();
+
+        try {
+            const resposta = await ApiService.cadastrarExercicio({
+                nome,
+                grupo_muscular,
+                descricao,
+                url_execucao
+            });
+
+            alert(resposta.mensagem || 'Exercício salvo com sucesso!');
+            window.fecharModalCadastroExercicio();
+            document.getElementById('form-cadastro-exercicio').reset();
+
+            const novosExercicios = await ApiService.getExercicios();
+            UiService.renderExercicios(novosExercicios);
+        } catch (error) {
+            alert(error.message);
+        }
     }
 };
 

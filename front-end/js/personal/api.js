@@ -47,17 +47,20 @@ const ApiService = {
     },
 
     async cadastrarExercicio(dados) {
-        const res = await fetch(`${API_URL}/exercicios`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(dados)
-        });
-        if (!res.ok) throw new Error('Erro ao cadastrar exercício');
-        return res.json();
-    },
+    const res = await fetch(`${API_URL}/exercicios`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(dados)
+    });
+    if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.erro || 'Erro ao cadastrar exercício');
+    }
+    return res.json();
+},
 
     async getFichasTreino() {
         const res = await fetch(`${API_URL}/fichas-treino`, {

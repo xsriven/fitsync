@@ -50,13 +50,16 @@ class TreinoRepository {
         );
     }
 
-    // Lista todas as fichas de treino cadastradas por um determinado personal
+    // CORRIGIDO: Agora faz o JOIN correto trazendo o email e contando as divisões reais (num_divisoes)
     async listarFichasPorPersonal(personalId) {
         const [rows] = await connection.execute(
-            `SELECT ft.id, ft.status, ft.data_criacao, u.nome as aluno_nome
+            `SELECT ft.id, u.nome as aluno_nome, u.email as aluno_email, 
+                    COUNT(DISTINCT dt.id) as num_divisoes, ft.status, ft.data_criacao
              FROM fichas_treino ft
              JOIN usuarios u ON ft.aluno_id = u.id
+             LEFT JOIN divisoes_treino dt ON ft.id = dt.ficha_id
              WHERE ft.personal_id = ?
+             GROUP BY ft.id
              ORDER BY ft.data_criacao DESC`,
             [personalId]
         );
@@ -66,7 +69,7 @@ class TreinoRepository {
     // Busca os dados básicos de uma ficha específica pelo ID dela
     async buscarFichaPorId(fichaId) {
         const [rows] = await connection.execute(
-            `SELECT ft.id, ft.status, ft.data_criacao, u.nome as aluno_nome, ft.personal_id
+            `SELECT ft.id, ft.status, ft.data_criacao, u.nome as aluno_nome, u.email as aluno_email, ft.personal_id
              FROM fichas_treino ft
              JOIN usuarios u ON ft.aluno_id = u.id
              WHERE ft.id = ?`,

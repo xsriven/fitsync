@@ -26,46 +26,42 @@ const UiService = {
         }
     },
 
-   // Substitua essa função no seu ui.js
-renderFichaAtivaExercicios(divisoes, fichaId) {
-    const container = document.getElementById("divisoes-treino-container");
-    const selectFichaCheckin = document.getElementById("select-ficha");
-    if (!container) return;
+    renderFichaAtivaExercicios(divisoes, fichaId) {
+        const container = document.getElementById("divisoes-treino-container");
+        const selectFichaCheckin = document.getElementById("select-ficha");
+        if (!container) return;
 
-    if (!divisoes || divisoes.length === 0) {
-        container.innerHTML = `
-            <div class="card" style="text-align: center; color: #666; padding: 40px; width: 100%;">
-                Nenhuma ficha de treino ativa vinculada a voce. Solicite ao seu Personal Trainer!
+        if (!divisoes || divisoes.length === 0) {
+            container.innerHTML = `
+                <div class="card" style="text-align: center; color: #666; padding: 40px; width: 100%;">
+                    Nenhuma ficha de treino ativa vinculada a voce. Solicite ao seu Personal Trainer!
+                </div>
+            `;
+            if (selectFichaCheckin) selectFichaCheckin.innerHTML = '<option value="">Nenhum treino disponivel</option>';
+            return;
+        }
+
+        if (selectFichaCheckin && fichaId) {
+            selectFichaCheckin.innerHTML = divisoes.map(div => `
+                <option value="${fichaId}">Ficha Ativa - ${div.identificador}</option>
+            `).join('');
+        }
+
+        container.style.cssText = "display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; width: 100%;";
+        container.innerHTML = divisoes.map(div => `
+            <div class="exercicio-item-treino" style="cursor: pointer; background: rgba(20, 20, 20, 0.6); padding: 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.2s;" 
+                 onclick="Handlers.visualizarDetalhesDaDivisao(${JSON.stringify(div).replace(/"/g, '&quot;')})"
+                 onmouseover="this.style.borderColor='rgba(57, 255, 20, 0.4)'; this.style.transform='translateY(-2px)';" 
+                 onmouseout="this.style.borderColor='rgba(255,255,255,0.05)'; this.style.transform='none';">
+                <p class="eyebrow" style="margin: 0 0 4px 0;">Rotina Semanal</p>
+                <h3 style="color: #fff; margin: 0 0 12px 0; font-size: 1.15rem;">${div.identificador}</h3>
+                <span style="font-size: 0.8rem; color: #39FF14; background: rgba(57,255,20,0.1); padding: 4px 10px; border-radius: 6px; font-weight: 600;">
+                    ${div.exercicios ? div.exercicios.length : 0} Exercicios vinculados
+                </span>
             </div>
-        `;
-        if (selectFichaCheckin) selectFichaCheckin.innerHTML = '<option value="">Nenhum treino disponivel</option>';
-        return;
-    }
-
-    // Popula o select do modal de check-in com o ID da FICHA (que o backend pede)
-    if (selectFichaCheckin && fichaId) {
-        selectFichaCheckin.innerHTML = divisoes.map(div => `
-            <option value="${fichaId}">Ficha Ativa - ${div.identificador}</option>
         `).join('');
-    }
+    },
 
-    // Renderiza blocos minimalistas para o Aluno escolher qual quer visualizar detalhadamente
-    container.style.cssText = "display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; width: 100%;";
-    container.innerHTML = divisoes.map(div => `
-        <div class="exercicio-item-treino" style="cursor: pointer; background: rgba(20, 20, 20, 0.6); padding: 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.2s;" 
-             onclick="Handlers.visualizarDetalhesDaDivisao(${JSON.stringify(div).replace(/"/g, '&quot;')})"
-             onmouseover="this.style.borderColor='rgba(57, 255, 20, 0.4)'; this.style.transform='translateY(-2px)';" 
-             onmouseout="this.style.borderColor='rgba(255,255,255,0.05)'; this.style.transform='none';">
-            <p class="eyebrow" style="margin: 0 0 4px 0;">Rotina Semanal</p>
-            <h3 style="color: #fff; margin: 0 0 12px 0; font-size: 1.15rem;">${div.identificador}</h3>
-            <span style="font-size: 0.8rem; color: #39FF14; background: rgba(57,255,20,0.1); padding: 4px 10px; border-radius: 6px; font-weight: 600;">
-                ${div.exercicios ? div.exercicios.length : 0} Exercicios vinculados
-            </span>
-        </div>
-    `).join('');
-},
-
-    // Injeta a tela focada de detalhes do treino com inteligência de impressão
     renderPainelFocadoTreino(div) {
         const container = document.getElementById("divisoes-treino-container");
         if (!container) return;
@@ -87,12 +83,9 @@ renderFichaAtivaExercicios(divisoes, fichaId) {
                     <div style="display: flex; flex-direction: column; gap: 20px;">
                         ${div.exercicios && div.exercicios.length > 0 ? div.exercicios.map(ex => {
                             let videoEmbedHTML = '';
-                            let temVideo = false;
-
                             if (ex.url_execucao && ex.url_execucao.includes('youtube.com/watch?v=')) {
                                 const videoId = ex.url_execucao.split('v=')[1]?.split('&')[0];
                                 if (videoId) {
-                                    temVideo = true;
                                     videoEmbedHTML = `
                                         <div id="video-box-${ex.id}" class="video-container-embed" style="flex: 1.2; min-width: 320px; max-width: 440px; width: 100%;">
                                             <div style="position: relative; width: 100%; padding-top: 56.25%; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); background: #000; box-shadow: 0 8px 24px rgba(0,0,0,0.4);">
@@ -105,7 +98,6 @@ renderFichaAtivaExercicios(divisoes, fichaId) {
 
                             return `
                                 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.04); padding: 24px; border-radius: 14px; gap: 24px;">
-                                    
                                     <div id="text-box-${ex.id}" style="flex: 1; min-width: 280px; display: flex; flex-direction: column; justify-content: center; gap: 12px;">
                                         <div>
                                             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
@@ -114,16 +106,13 @@ renderFichaAtivaExercicios(divisoes, fichaId) {
                                             </div>
                                             <p style="color: #888; font-size: 0.9rem; margin: 0; line-height: 1.5; max-width: 650px;">${ex.descricao || 'Sem recomendacoes tecnicas complementares cadastradas.'}</p>
                                         </div>
-                                        
                                         <div>
                                             <span style="font-weight: 700; color: #39FF14; font-size: 1.05rem; background: rgba(57, 255, 20, 0.05); border: 1px solid rgba(57, 255, 20, 0.15); display: inline-block; padding: 6px 16px; border-radius: 8px; letter-spacing: 0.5px;">
                                                 ${ex.series} × ${ex.repeticoes} Repeticoes
                                             </span>
                                         </div>
                                     </div>
-                                    
                                     ${videoEmbedHTML}
-                                    
                                 </div>
                             `;
                         }).join('') : '<p style="color: #555; font-style: italic; padding: 10px;">Nenhum exercicio anexado a essa divisao de carga.</p>'}
@@ -182,6 +171,5 @@ renderFichaAtivaExercicios(divisoes, fichaId) {
                 </tr>
             `;
         }).join('');
-    }
-    
-};
+    },
+}

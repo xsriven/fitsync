@@ -8,7 +8,6 @@ router.post('/fichas-treino/divisoes', autenticado, apenasPersonal, TreinoContro
 router.get('/fichas-treino', autenticado, apenasPersonal, TreinoController.listarFichas);
 router.get('/fichas-treino/:fichaId', autenticado, apenasPersonal, TreinoController.buscarDetalhesFicha);
 router.delete('/fichas-treino/:fichaId', autenticado, apenasPersonal, TreinoController.excluirFicha);
-router.get('/treinos', autenticado, apenasPersonal, TreinoController.listarFichas);
 
 router.get('/meu-treino-ativo', autenticado, TreinoController.buscarFichaAtivaAluno);
 router.post('/execucoes-treino', autenticado, TreinoController.registrarExecucao);
