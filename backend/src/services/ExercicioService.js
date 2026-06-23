@@ -29,6 +29,18 @@ class ExercicioService {
 
         return novoId;
     }
+
+    async deletarExercicio(id) {
+        try {
+            await ExercicioRepository.excluir(id);
+            return true;
+        } catch (error) {
+            if (error.code === 'ER_ROW_IS_REFERENCED_2' || error.code === '1217') {
+                throw new Error('Nao e possivel excluir este exercicio pois ele esta vinculado a uma ficha de treino ativa.');
+            }
+            throw error;
+        }
+    }
 }
 
 module.exports = new ExercicioService();

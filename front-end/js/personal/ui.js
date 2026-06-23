@@ -19,30 +19,42 @@ const UiService = {
         const container = document.getElementById('alunos-container');
         const totalCount = document.getElementById('total-alunos');
         
-        if (totalCount) totalCount.textContent = alunos.length;
+        if (totalCount) totalCount.textContent = alunos.filter(al => al.status === 'ATIVO').length;
         if (!container) return;
 
         if (alunos.length === 0) {
-            container.innerHTML = '<p class="dashboard-message">Nenhum aluno vinculado a voce ainda.</p>';
+            container.innerHTML = '<p class="dashboard-message">Nenhum aluno encontrado para este filtro.</p>';
             return;
         }
 
-        container.innerHTML = alunos.map(aluno => `
-            <div class="aluno-card">
-                <div class="aluno-card-header">
-                    <h3>${aluno.nome}</h3>
-                    <span class="status-badge">Ativo</span>
+        container.innerHTML = alunos.map(aluno => {
+            const isInativo = aluno.status === 'INATIVO';
+            
+            return `
+                <div class="aluno-card" style="${isInativo ? 'opacity: 0.55; border-color: rgba(255,255,255,0.05); background: rgba(255,255,255,0.01);' : ''}">
+                    <div class="aluno-card-header">
+                        <h3>${aluno.nome}</h3>
+                        <span class="status-badge ${isInativo ? 'inactive' : 'active'}" style="${isInativo ? 'background: rgba(255,85,85,0.15); color: #ff5555;' : ''}">
+                            ${aluno.status}
+                        </span>
+                    </div>
+                    <div class="aluno-card-body">
+                        <p><strong>Email:</strong> ${aluno.email}</p>
+                        <p><strong>Objetivo:</strong> ${aluno.objetivo || 'Nao informado'}</p>
+                    </div>
+                    <div class="aluno-card-actions">
+                        ${isInativo ? `
+                            <button class="primary-button btn-small" onclick="Handlers.reativarAlunoCompleto(${aluno.id_usuario || aluno.id}, '${aluno.nome}')" style="width: 100%; background: #39FF14; color: #000;">
+                                <i class="fa-solid fa-arrows-rotate"></i> Reativar Aluno
+                            </button>
+                        ` : `
+                            <button class="secondary-button btn-small" onclick="Handlers.verPerfilAluno(${aluno.id_usuario || aluno.id})">Prontuario</button>
+                            <button class="primary-button btn-small" onclick="Handlers.carregarFichaParaCriacao(${aluno.id_usuario || aluno.id}, '${aluno.nome}')">Adicionar Treino</button>
+                        `}
+                    </div>
                 </div>
-                <div class="aluno-card-body">
-                    <p><strong>Email:</strong> ${aluno.email}</p>
-                    <p><strong>Objetivo:</strong> ${aluno.objetivo || 'Nao informado'}</p>
-                </div>
-                <div class="aluno-card-actions">
-                    <button class="secondary-button btn-small" onclick="Handlers.verPerfilAluno(${aluno.id_usuario})">Prontuario</button>
-                    <button class="primary-button btn-small" onclick="Handlers.carregarFichaParaCriacao(${aluno.id_usuario}, '${aluno.nome}')">Adicionar Treino</button>
-                </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
     },
 
    renderFichas(fichas) {
@@ -76,7 +88,6 @@ const UiService = {
     renderExercicios(exercicios, primeiroCarregamento = false) {
         listaExerciciosGlobal = exercicios;
         
-        // CORREÇÃO: Se for o primeiro carregamento ou se o backup estiver vazio, salva a lista mestre
         if (primeiroCarregamento || listaExerciciosBackup.length === 0) {
             listaExerciciosBackup = exercicios;
         }
@@ -85,7 +96,7 @@ const UiService = {
         if (!tableBody) return;
 
         if (exercicios.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #666; padding: 40px;">Nenhum exercicio encontrado.</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #666; padding: 40px;">Nenhum exercício encontrado.</td></tr>`;
             return;
         }
 
@@ -93,8 +104,16 @@ const UiService = {
             <tr>
                 <td><strong>${ex.nome}</strong></td>
                 <td><span class="status-badge">${ex.grupo_muscular}</span></td>
-                <td>${ex.descricao || 'Sem descricao tecnica'}</td>
-                <td>${ex.url_execucao ? `<a href="${ex.url_execucao}" target="_blank" class="table-link">Ver link</a>` : 'Nao possui'}</td>
+                <td>${ex.descricao || 'Sem descrição técnica'}</td>
+                <td>${ex.url_execucao ? `<a href="${ex.url_execucao}" target="_blank" class="table-link">Ver link</a>` : 'Não possui'}</td>
+                <td style="text-align: center;">
+                    <button onclick="Handlers.deletarExercicioCompleto(${ex.id}, '${ex.nome}')" 
+                            style="background: transparent; border: none; color: #ff5555; font-size: 1.4rem; cursor: pointer; padding: 0; line-height: 1; transition: color 0.2s;"
+                            onmouseover="this.style.color='#ff1a1a'"
+                            onmouseout="this.style.color='#ff5555'">
+                        &times;
+                    </button>
+                </td>
             </tr>
         `).join('');
     },

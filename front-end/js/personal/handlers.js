@@ -40,7 +40,7 @@ const Handlers = {
                     </div>
                     <div class="prontuario-grupo">
                         <h4>Condições Médicas</h4>
-                        <p>${data.condicoes_medicas || 'Nenhuma condition mapeada.'}</p>
+                        <p>${data.condicoes_medicas || 'Nenhuma condição mapeada.'}</p>
                     </div>
                     
                     <div class="divider"></div>
@@ -50,10 +50,88 @@ const Handlers = {
                             ${checkinsHTML}
                         </ul>
                     </div>
+
+                    <div class="form-actions" style="margin-top: 24px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 16px;">
+                        <button type="button" class="secondary-button" onclick="window.fecharModalAluno(); Handlers.desativarAlunoCompleto(${data.id_usuario}, '${data.nome}')" 
+                                style="width: 100%; background: rgba(255,85,85,0.05); color: #ff5555; border-color: rgba(255,85,85,0.15); display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; font-weight: 600;"
+                                onmouseover="this.style.background='rgba(255,85,85,0.1)'"
+                                onmouseout="this.style.background='rgba(255,85,85,0.05)'">
+                            <i class="fa-solid fa-trash"></i> Desativar Aluno
+                        </button>
+                    </div>
                 `;
             }
         } catch (error) {
             if (modalBody) modalBody.innerHTML = `<p style="color:red;">${error.message}</p>`;
+        }
+    },
+
+    async desativarAlunoCompleto(alunoId, alunoNome) {
+        const confirmar = confirm(`Tem certeza que deseja desativar o aluno ${alunoNome}? Ele perderá o acesso ao sistema e sumirá do seu painel.`);
+        if (!confirmar) return;
+
+        try {
+            const resultado = await ApiService.desativarAluno(alunoId);
+            alert(resultado.mensagem || 'Aluno desativado com sucesso.');
+            
+            if (typeof listaAlunosGlobal !== 'undefined') {
+                listaAlunosGlobal = listaAlunosGlobal.filter(al => parseInt(al.id_usuario || al.id) !== parseInt(alunoId));
+            }
+
+            const novosAlunos = await ApiService.getAlunos();
+            UiService.renderAlunos(novosAlunos);
+        } catch (error) {
+            alert(error.message);
+        }
+    },
+
+    async alternarVisualizacaoAlunos(mostrarInativos) {
+        try {
+            const statusAlvo = mostrarInativos ? 'INATIVO' : 'ATIVO';
+            const res = await fetch(`${API_URL}/alunos?status=${statusAlvo}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!res.ok) throw new Error('Erro ao filtrar alunos');
+            const alunosFiltrados = await res.json();
+            
+            UiService.renderAlunos(alunosFiltrados);
+        } catch (error) {
+            alert(error.message);
+        }
+    },
+
+    async reativarAlunoCompleto(alunoId, alunoNome) {
+        try {
+            const res = await fetch(`${API_URL}/alunos/${alunoId}/reativar`, {
+                method: 'PUT',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!res.ok) throw new Error('Erro ao reativar aluno');
+            
+            alert(`Aluno ${alunoNome} reativado com sucesso!`);
+            
+            const chk = document.getElementById('chk-ver-inativos');
+            if (chk) chk.checked = false;
+            
+            const alunosAtivos = await ApiService.getAlunos();
+            UiService.renderAlunos(alunosAtivos);
+        } catch (error) {
+            alert(error.message);
+        }
+    },
+
+    async deletarExercicioCompleto(exercicioId, exercicioNome) {
+        const confirmar = confirm(`Tem certeza que deseja excluir o exercício "${exercicioNome}" da biblioteca?`);
+        if (!confirmar) return;
+
+        try {
+            const resultado = await ApiService.excluirExercicio(exercicioId);
+            alert(resultado.mensagem || 'Exercício excluído com sucesso.');
+            
+            const novosExercicios = await ApiService.getExercicios();
+            UiService.renderExercicios(novosExercicios);
+        } catch (error) {
+            alert(error.message);
         }
     },
 

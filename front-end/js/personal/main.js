@@ -24,14 +24,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Eventos e filtros da interface
+
     document.getElementById('searchBox')?.addEventListener('input', Handlers.filtrarAlunosInput);
     document.getElementById('filtro-grupo-muscular')?.addEventListener('change', Handlers.filtrarExercicios);
+
     
-    // ATIVAÇÃO DO AUTOCOMPLETE DE ALUNOS NA FICHA DE TREINO
     document.getElementById('busca-aluno-ficha')?.addEventListener('keyup', Handlers.filtrarAlunosParaFicha);
 
-    // Gerenciador de fechamento de Modais clicando fora da caixa
+
     window.addEventListener('click', event => {
         if (event.target === document.getElementById('aluno-modal')) {
             document.getElementById('aluno-modal').classList.add('hidden');
@@ -50,7 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
     inicializarDashboard();
 });
 
-// Funções utilitárias globais de controle de Modais simples e Logout
 window.fecharModalAluno = () => document.getElementById('aluno-modal')?.classList.add('hidden');
 window.fecharModalFicha = () => document.getElementById('ficha-treino-modal')?.classList.add('hidden');
 window.fecharModalCadastroAluno = () => document.getElementById('cadastro-aluno-modal')?.classList.add('hidden');

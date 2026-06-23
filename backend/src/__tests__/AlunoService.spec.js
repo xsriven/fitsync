@@ -5,13 +5,20 @@ const bcrypt = require('bcrypt');
 
 jest.mock('../repositories/AlunoRepository');
 jest.mock('../repositories/UsuarioRepository');
-jest.mock('bcrypt');
 
-describe('AlunoService - cadastrarAluno', () => {
+// CORREÇÃO: Mock apenas local para evitar vazamento nos testes de integração
+jest.spyOn(bcrypt, 'hash');
+
+describe('aluno service - cadastrar aluno', () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
+    /**
+     * teste de caminho feliz
+     * valida o fluxo completo de criacao de conta, evolucao fisica e anamnese
+     * quando todas as entradas estao corretas e dentro das regras estabelecidas
+     */
     it('deve cadastrar um aluno com sucesso se todos os dados forem validos', async () => {
         UsuarioRepository.buscarPorEmail.mockResolvedValue(null);
         bcrypt.hash.mockResolvedValue('senha_criptografada');
@@ -41,6 +48,11 @@ describe('AlunoService - cadastrarAluno', () => {
         expect(UsuarioRepository.criarUsuario).toHaveBeenCalledWith('Sabrina Moreira', 'sabrina@gmail.com', 'senha_criptografada', 'ALUNO');
     });
 
+    /**
+     * teste de regra de negocio / unicidade
+     * verifica o bloqueio de cadastros duplicados no sistema
+     * garantindo que o mesmo endereco de e-mail nao seja associado a multiplas contas
+     */
     it('deve lancar um erro se o e-mail ja estiver cadastrado', async () => {
         UsuarioRepository.buscarPorEmail.mockResolvedValue({ id: 1, email: 'sabrina@gmail.com' });
 
@@ -51,6 +63,11 @@ describe('AlunoService - cadastrarAluno', () => {
         ).rejects.toThrow('Email ja cadastrado');
     });
 
+    /**
+     * teste de limite / borda fisiologica
+     * avalia o comportamento do sistema diante de valores biometricos extremos
+     * certificando que as restricoes de peso e altura barram dados incoerentes
+     */
     it('deve lancar um erro se os valores corporais estiverem fora dos limites permitidos', async () => {
         UsuarioRepository.buscarPorEmail.mockResolvedValue(null);
 

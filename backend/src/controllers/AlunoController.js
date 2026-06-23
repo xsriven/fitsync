@@ -2,19 +2,16 @@ const AlunoService = require('../services/AlunoService');
 
 class AlunoController {
     
-    // Processa o cadastro completo do aluno
     async cadastrar(req, res) {
         try {
             const personalId = req.usuario.id;
             
-            // Repassa os dados coletados no corpo da requisição para o serviço processar
             await AlunoService.cadastrarAluno(personalId, req.body);
 
             return res.status(201).json({
                 mensagem: 'Aluno, avaliacao corporal e ficha de anamnese cadastrados com sucesso!'
             });
         } catch (error) {
-            // Captura erros de validações e regras de negócio lançadas pelo Service
             if (error.message === 'Email ja cadastrado' || error.message.includes('fora dos limites')) {
                 return res.status(400).json({ erro: error.message });
             }
@@ -23,13 +20,13 @@ class AlunoController {
         }
     }
 
-    // Lista os alunos respeitando o escopo do usuário autenticado
     async listar(req, res) {
         try {
             const userRole = req.usuario.tipo || req.usuario.tipo_usuario;
             const usuarioId = req.usuario.id;
+            const { status } = req.query; 
 
-            const alunos = await AlunoService.listarAlunos(userRole, usuarioId);
+            const alunos = await AlunoService.listarAlunos(userRole, usuarioId, status || 'ATIVO');
             return res.json(alunos);
         } catch (error) {
             console.error(error);
@@ -37,7 +34,6 @@ class AlunoController {
         }
     }
 
-    // Carrega o histórico de pesagem do aluno
     async listarEvolucaoFisica(req, res) {
         try {
             const alunoId = req.usuario.id;
@@ -49,7 +45,6 @@ class AlunoController {
         }
     }
 
-    // Adiciona uma nova medição de evolução para o histórico
     async registrarEvolucaoFisica(req, res) {
         try {
             const alunoId = req.usuario.id;
@@ -58,7 +53,7 @@ class AlunoController {
             await AlunoService.registrarNovaEvolucao(alunoId, peso, altura);
 
             return res.status(201).json({ 
-                mensagem: 'Dados corporais atualizados e IMC recalculado com sucesso!' 
+                mensagem: 'Dados corporais updated e IMC recalculado com sucesso!' 
             });
         } catch (error) {
             if (error.message.includes('fora dos limites')) {
@@ -69,7 +64,6 @@ class AlunoController {
         }
     }
 
-    // Carrega o prontuário de anamnese e check-ins do aluno
     async buscarPorId(req, res) {
         try {
             const alunoId = req.params.id;
@@ -79,7 +73,6 @@ class AlunoController {
             const prontuario = await AlunoService.buscarProntuarioPorId(alunoId, userRole, logadoId);
             return res.json(prontuario);
         } catch (error) {
-            // Trata as exceções de segurança e existência da camada Service
             if (error.message.includes('nao encontrado')) {
                 return res.status(404).json({ erro: error.message });
             }
@@ -88,6 +81,26 @@ class AlunoController {
             }
             console.error(error);
             return res.status(500).json({ erro: 'Erro interno ao processar a busca do prontuario.' });
+        }
+    }
+
+    async desativar(req, res) {
+        try {
+            const alunoId = req.params.id;
+            const personalId = req.usuario.id;
+
+            await AlunoService.desativarAlunoPorPersonal(alunoId, personalId);
+
+            return res.json({ mensagem: 'Aluno desativado com sucesso!' });
+        } catch (error) {
+            if (error.message.includes('nao encontrado')) {
+                return res.status(404).json({ erro: error.message });
+            }
+            if (error.message.includes('Acesso proibido')) {
+                return res.status(403).json({ erro: error.message });
+            }
+            console.error(error);
+            return res.status(500).json({ erro: 'Erro interno ao desativar aluno.' });
         }
     }
 }

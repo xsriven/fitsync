@@ -7,6 +7,7 @@ const router = express.Router();
 router.post('/alunos', autenticado, apenasPersonal, AlunoController.cadastrar);
 router.get('/alunos', autenticado, AlunoController.listar);
 router.get('/alunos/:id', autenticado, AlunoController.buscarPorId);
+router.put('/alunos/:id/desativar', autenticado, apenasPersonal, AlunoController.desativar);
 
 router.get('/evolucao-fisica', autenticado, apenasAluno, AlunoController.listarEvolucaoFisica);
 router.post('/evolucao-fisica', autenticado, apenasAluno, AlunoController.registrarEvolucaoFisica);

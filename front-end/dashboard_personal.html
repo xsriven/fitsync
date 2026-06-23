@@ -65,7 +65,13 @@
 
                     <div class="section-title-row">
                         <h2>Listagem de alunos</h2>
-                        <button class="primary-button" onclick="abrirModalCadastroAluno()">+ Novo aluno</button>
+                        <div style="display: flex; gap: 15px; align-items: center;">
+                            <label style="display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: #aaa; cursor: pointer; user-select: none;">
+                                <input type="checkbox" id="chk-ver-inativos" onchange="Handlers.alternarVisualizacaoAlunos(this.checked)" style="accent-color: #39FF14; width: 16px; height: 16px;">
+                                Mostrar Inativos
+                            </label>
+                            <button class="primary-button" onclick="abrirModalCadastroAluno()">+ Novo aluno</button>
+                        </div>
                     </div>
 
                     <div id="alunos-container" class="alunos-container"></div>
@@ -191,6 +197,7 @@
                                     <th>Grupo muscular</th>
                                     <th>Descrição técnica</th>
                                     <th>Vídeo</th>
+                                    <th style="width: 80px; text-align: center;">Ações</th>
                                 </tr>
                             </thead>
                             <tbody id="exercicios-table-body">
@@ -366,10 +373,6 @@
 
             <div id="modal-aluno-body" class="dashboard-message">
                 <p>Carregando prontuário do aluno...</p>
-            </div>
-
-            <div class="form-actions" style="margin-top: 24px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 16px;">
-                <button type="button" class="secondary-button" onclick="fecharModalAluno()" style="width: 100%;">Fechar Janela</button>
             </div>
         </div>
     </div>

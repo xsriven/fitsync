@@ -23,31 +23,24 @@ class AlunoRepository {
         );
     }
 
-    async listarComFiltros(userRole, usuarioId) {
+    async listarComFiltros(userRole, usuarioId, statusAlvo = 'ATIVO') {
         let query = `
-            SELECT u.id, u.id AS id_usuario, u.nome, u.email, a.objetivo, a.data_nascimento
+            SELECT u.id, u.id AS id_usuario, u.nome, u.email, a.objetivo, a.data_nascimento, u.status
             FROM usuarios u
             INNER JOIN alunos a ON u.id = a.id_usuario
+            WHERE u.status = ?
         `;
-        let params = [];
+        let params = [statusAlvo];
 
         if (userRole === 'ALUNO') {
-            query += ' WHERE u.id = ?';
+            query += ' AND u.id = ?';
             params.push(usuarioId);
         } else if (userRole === 'PERSONAL') {
-            query += ' WHERE a.personal_id = ?';
+            query += ' AND a.personal_id = ?';
             params.push(usuarioId);
         }
 
         const [rows] = await connection.query(query, params);
-        return rows;
-    }
-
-    async buscarHistoricoEvolucao(alunoId) {
-        const [rows] = await connection.execute(
-            'SELECT id, peso, altura, data_registro FROM evolucao_fisica WHERE aluno_id = ? ORDER BY data_registro ASC',
-            [alunoId]
-        );
         return rows;
     }
 
@@ -84,5 +77,7 @@ class AlunoRepository {
         return checkins;
     }
 }
+
+
 
 module.exports = new AlunoRepository();

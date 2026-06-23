@@ -6,18 +6,17 @@ const jwt = require('jsonwebtoken');
 describe('Testes de Integração - Módulo de Exercícios', () => {
     let tokenPersonal;
     let tokenAluno;
+    let idExercicioCriado; // Guarda o ID para testar a exclusão no final
 
     beforeAll(() => {
         process.env.JWT_SECRET = process.env.JWT_SECRET || 'teste_secret_chave';
         
-        // 1. Token válido de personal trainer
         tokenPersonal = jwt.sign(
             { id: 1, tipo: 'PERSONAL' },
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
         );
 
-        // 2. Token de aluno para testes de restrição de acesso
         tokenAluno = jwt.sign(
             { id: 2, tipo: 'ALUNO' },
             process.env.JWT_SECRET,
@@ -26,6 +25,7 @@ describe('Testes de Integração - Módulo de Exercícios', () => {
     });
 
     afterAll(async () => {
+        // Garante a limpeza de qualquer resquício de teste do banco
         await connection.execute('DELETE FROM exercicios WHERE nome LIKE ?', ['%Teste Integração%']);
         await connection.end();
     });
@@ -36,7 +36,7 @@ describe('Testes de Integração - Módulo de Exercícios', () => {
             nome: 'Supino Reto - Teste Integração',
             grupo_muscular: 'Peito',
             descricao: 'Execução clássica com barra de 20kg',
-            url_execucao: 'http://youtube.com/supino'
+            url_execucao: 'https://www.youtube.com/watch?v=zdK07X87bAU'
         };
 
         const response = await request(app)
@@ -47,6 +47,8 @@ describe('Testes de Integração - Módulo de Exercícios', () => {
         expect(response.status).toBe(201);
         expect(response.body).toHaveProperty('mensagem', 'Exercicio cadastrado com sucesso!');
         expect(response.body).toHaveProperty('id');
+        
+        idExercicioCriado = response.body.id; // Armazena para os testes seguintes
     });
 
     // TESTE 2: Listagem geral do banco
@@ -68,7 +70,7 @@ describe('Testes de Integração - Módulo de Exercícios', () => {
             .post('/exercicios')
             .send({ nome: 'Invasão - Teste Integração', grupo_muscular: 'Bíceps' });
 
-        expect(response.status).toBe(401); // Não autorizado
+        expect(response.status).toBe(401);
     });
 
     // TESTE 4: Teste de segurança - Bloqueio por nível de acesso
@@ -96,5 +98,39 @@ describe('Testes de Integração - Módulo de Exercícios', () => {
             });
 
         expect(response.status).toBe(400); 
+    });
+
+    // TESTE 6: Validação de link do YouTube incorreto
+    it('6. Deve retornar erro se a URL enviada não for do YouTube', async () => {
+        const response = await request(app)
+            .post('/exercicios')
+            .set('Authorization', `Bearer ${tokenPersonal}`)
+            .send({
+                nome: 'Rosca Direta - Teste Integração',
+                grupo_muscular: 'Bíceps',
+                url_execucao: 'https://google.com/video-fake' // Link inválido para a RegEx
+            });
+
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('erro', 'Por favor, insira uma URL valida do YouTube.');
+    });
+
+    // TESTE 7: Segurança na remoção - Bloqueio para Alunos
+    it('7. Deve barrar a exclusão de um exercício se o usuário for um ALUNO', async () => {
+        const response = await request(app)
+            .delete(`/exercicios/${idExercicioCriado}`)
+            .set('Authorization', `Bearer ${tokenAluno}`);
+
+        expect(response.status).toBe(403);
+    });
+
+    // TESTE 8: Fluxo perfeito de exclusão
+    it('8. Deve excluir o exercício com sucesso se for um Personal autenticado', async () => {
+        const response = await request(app)
+            .delete(`/exercicios/${idExercicioCriado}`)
+            .set('Authorization', `Bearer ${tokenPersonal}`);
+
+        expect(response.status).toBe(200);
+        expect(response.body).toHaveProperty('mensagem', 'Exercicio excluido com sucesso!');
     });
 });

@@ -38,6 +38,18 @@ const ApiService = {
         return res.json();
     },
 
+    async desativarAluno(alunoId) {
+        const res = await fetch(`${API_URL}/alunos/${alunoId}/desativar`, {
+            method: 'PUT',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.erro || 'Erro ao desativar aluno');
+        }
+        return res.json();
+    },
+
     async getExercicios() {
         const res = await fetch(`${API_URL}/exercicios`, {
             headers: { 'Authorization': `Bearer ${token}` }
@@ -47,20 +59,20 @@ const ApiService = {
     },
 
     async cadastrarExercicio(dados) {
-    const res = await fetch(`${API_URL}/exercicios`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(dados)
-    });
-    if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.erro || 'Erro ao cadastrar exercício');
-    }
-    return res.json();
-},
+        const res = await fetch(`${API_URL}/exercicios`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(dados)
+        });
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.erro || 'Erro ao cadastrar exercício');
+        }
+        return res.json();
+    },
 
     async getFichasTreino() {
         const res = await fetch(`${API_URL}/fichas-treino`, {
@@ -82,6 +94,18 @@ const ApiService = {
         return res.json();
     },
 
+    async excluirExercicio(exercicioId) {
+        const res = await fetch(`${API_URL}/exercicios/${exercicioId}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.erro || 'Erro ao excluir exercício.');
+        }
+        return res.json();
+    },
+    
     async getDetalhesFicha(fichaId) {
         const res = await fetch(`${API_URL}/fichas-treino/${fichaId}`, {
             headers: { 'Authorization': `Bearer ${token}` }
@@ -106,4 +130,3 @@ const ApiService = {
         return res.json();
     }
 };
-

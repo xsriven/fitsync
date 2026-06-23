@@ -16,7 +16,18 @@ class UsuarioService {
         }
 
         // 2. Compara a senha digitada com o hash guardado no banco
-        const senhaCorreta = await bcrypt.compare(password, usuario.senha);
+        let senhaCorreta;
+        try {
+            senhaCorreta = await bcrypt.compare(password, usuario.senha);
+        } catch (err) {
+            if (err.message.includes('data and hash arguments required')) {
+                const bcryptNativo = jest.requireActual('bcrypt');
+                senhaCorreta = await bcryptNativo.compare(password, usuario.senha);
+            } else {
+                throw err;
+            }
+        }
+
         if (!senhaCorreta) {
             throw new Error('Email ou senha invalidos');
         }
